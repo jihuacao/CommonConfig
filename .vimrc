@@ -10,6 +10,10 @@ Plugin 'VundleVim/Vundle.vim'
 
 "add NERDTree
 Plugin 'scrooloose/nerdtree'
+" " NERDTree advance plugin make nerdtree open Synchronously between tabs
+Bundle 'jistr/vim-nerdtree-tabs'
+" " NERDTree advance Plugin make nerdtree contain git information
+Bundle 'Xuyuanp/nerdtree-git-plugin'
 "add YouCompleteMe
 Plugin 'Valloric/YouCompleteMe'
 "add taglist
@@ -70,6 +74,7 @@ nnoremap + :vertical resize+3<CR>
 " "窗口大小调整，使用-/=调节垂直大小，使用_/+调节水平大小
 " "快捷保存与保存关闭缓存快捷键设置
 inoremap <C-w> <Esc>:w<CR>a
+nnoremap <C-W> :w<CR>
 " " '说明由于发现了默认的：保存退出命令：shift+zz;不保存退出命令：shift+zq，就不添加这两个快捷键了
 " "快捷保存快捷键设置， insert模式下Ctrl+w进行保存(由于Ctrl+s是位于vim之上的信息检测，是终端暂停功能，因此vim中的Ctrl+s会被上层劫持，此处不使用Ctrl+s,Esc推出insert模式，:w保存， CR代表Enter，a重回输入模式)
 " "状态栏设置
@@ -100,8 +105,31 @@ set laststatus=2
 
 " nerdtree 文件列表设置
 " " F2关闭与打开文件列表
-nnoremap <F2> :NERDTreeToggle<CR>
+nnoremap <F2> :NERDTreeTabsToggle<CR>
 " " F2关闭与打开文件列表
+" " 刷新文件列表
+" 在文件列表窗口中按r会刷新文件列表
+" " 刷新文件列表
+" " 在nerdtree中的相关文件操作
+" 在文件列表窗口中按m可以显示文件操作命令列表
+" " 在nerdtree中的相关文件操作
+" " 设置默认显示隐藏文件
+let NERDTreeShowHidden=1
+" “ 设置默认显示隐藏文件
+" " 设置git信息显示图标
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+" " 设置git信息显示图标
 " " 设置文件列表窗口大小
 
 " " 设置文件列表大小
