@@ -1,10 +1,9 @@
 set nocompatible
-filetype off                  " 必须要添加
+filetype off	" 必须要添加
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " 另一种选择, 指定一个vundle安装插件的路径
 "call vundle#begin('~/some/path/here')
-
 " 让vundle管理插件版本,必须
 Plugin 'VundleVim/Vundle.vim'
 
@@ -25,6 +24,10 @@ Plugin 'sillybun/vim-async'
 Plugin 'sillybun/zytutil'
 " 文件模糊搜索功能
 Plugin 'ctrlpvim/ctrlp.vim'
+" 程序debug插件 vedebug
+Plugin 'vim-vdebug/vdebug'
+" 智能语法提示插件
+Plugin 'vim-syntastic/syntastic.git'
 call vundle#end()            " 必须
 
 filetype on
@@ -50,7 +53,13 @@ filetype plugin on
 " " : yy复制一行
 " " : 在visual模式中使用配合移动方法能够进行高效的复制剪切
 " "操作相关说明
-" " 
+" "
+" " 键位映射更改
+" " : 通过Ctrl-]在插入模式下进行backspace
+imap <C-]> <BS>
+" " : 通过Ctrl+[在插入模式下进行esc
+imap <C-[> <Esc>
+" " 键位映射更改
 set nu!
 set ai
 syntax on 
@@ -104,9 +113,9 @@ set laststatus=2
 "通用设置
 
 " nerdtree 文件列表设置
-" " F2关闭与打开文件列表
-nnoremap <F2> :NERDTreeTabsToggle<CR>
-" " F2关闭与打开文件列表
+" " leader+<F2>关闭与打开文件列表
+nnoremap <leader><F2> :NERDTreeTabsToggle<CR>
+" " leader+<F2>关闭与打开文件列表
 " " 刷新文件列表
 " 在文件列表窗口中按r会刷新文件列表
 " " 刷新文件列表
@@ -171,8 +180,8 @@ let g:ycm_key_list_stop_completion=['<CR>']
 let g:ycm_semantic_triggers = {
 	\ 'c, python, cpp': ['re!\w{2}'],
 	\ }
-" " 设置python路径
-let g:ycm_python_binary_path='/home/sins/anaconda2/envs/356/bin/python'
+" " 设置python路径:mutable
+let g:ycm_python_binary_path='/home/sins/anaconda3/envs/356/bin/python'
 " " 错误诊断关闭
 let g:ycm_show_diagnostics_ui = 0
 " " 关闭补全框快捷
@@ -232,11 +241,37 @@ let g:Tlist_File_Fold_Auto_Close=1
 " " 只有当前函数列表窗口的时候退出vim
 let g:Tlist_Exit_OnlyWindow=1
 " " 配置当前只有函数列表窗口的时候退出vim
-" " 快捷键F3关闭函数列表
-map <F4> :TlistToggle<cr>
-" " 快捷键F4切换函数列表
+" " 快捷键leader+<F3>关闭函数列表
+map <leader><F3> :TlistToggle<cr>
+" " 快捷键leader+<F3>切换函数列表
 " taglist配置
 
+" vdebug 配置
+" " 配置leader
+
+" " 配置leader
+" vdebug 配置
+" syntastic 配置
+" "
+set statusline+=%#warningmsg#
+" "
+set statusline+=%{SyntasticStatuslineFlag()}
+" "
+set statusline+=%*
+" "
+let g:syntastic_always_populate_loc_list = 1
+" "
+let g:syntastic_auto_loc_list = 1
+" "
+let g:syntastic_check_on_open = 1
+" "
+let g:syntastic_check_on_wq = 0
+" " 配置python代码分析器，改分析器需要另外安装，syntastic主要是将分析器的分析信息在vim中进行可视化:mutable
+" " 为了支持多版本python，要在对应环境python进行pip安装pylint，在对应环境下运行pylint,才能使用对应环境的语法规范:mutable
+let g:syntastic_python_checkers = ['pylint']
+" " : 配置pylint的参数
+let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
+" syntastic 配置
 " " 文件保存时的更新函数
 function! WriteUpdate()
 	:TlistUpdate
