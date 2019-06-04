@@ -28,6 +28,10 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-vdebug/vdebug'
 " 智能语法提示插件
 Plugin 'vim-syntastic/syntastic.git'
+" git文件对比信息显示
+Plugin 'airblade/vim-gitgutter'
+" 代码片段插件
+Plugin 'SirVer/ultisnips'
 call vundle#end()            " 必须
 
 filetype on
@@ -60,6 +64,12 @@ imap <C-]> <BS>
 " " : 通过Ctrl+[在插入模式下进行esc
 imap <C-[> <Esc>
 " " 键位映射更改
+" " 设置行列高亮
+set cursorcolumn
+set cursorline
+highlight CursorLine   cterm=NONE ctermbg=black ctermfg=green guibg=NONE guifg=NONE
+highlight CursorColumn cterm=NONE ctermbg=black ctermfg=green guibg=NONE guifg=NONE
+" " 设置行列高亮
 set nu!
 set ai
 syntax on 
@@ -113,6 +123,8 @@ set laststatus=2
 "通用设置
 
 " nerdtree 文件列表设置
+" " 设置窗口大小
+let NERDTreeWinSize=20
 " " leader+<F2>关闭与打开文件列表
 nnoremap <leader><F2> :NERDTreeTabsToggle<CR>
 " " leader+<F2>关闭与打开文件列表
@@ -146,14 +158,25 @@ let g:NERDTreeIndicatorMapCustom = {
 
 " python设置
 au BufNewFile,BufRead *.py
-\set tabstop=4
-\set softtabstop=4
-\set shiftwidth=4
-\set textwidth=79
-\set expandtab
-\set autoindent
-\set fileformat=unix
+			\set tabstop=4
+			\set softtabstop=4
+			\set shiftwidth=4
+			\set textwidth=79
+			\set expandtab
+			\set autoindent
+			\set fileformat=unix
 " python设置
+
+" c++设置
+au BufNewFile,BufRead *.hpp, *.cpp, *.h, *.c, *.cc
+			\set tabstop=4
+			\set softtabstop=4
+			\set shiftwidth=4
+			\set textwidth=79
+			\set autoindent
+			\set cindent
+			\set fileformat=unix
+" c++设置
 
 " ycm 通用设置
 " " 让vim自动加载ycm配置文件，不再提示询问是否加载
@@ -223,6 +246,8 @@ let g:ctrlp_follow_symlinks=1
 " tab 配置
 " " tab 打开新标签页
 nnoremap <C-n> :tabnew<CR>
+" " 显示标签号
+" " 显示标签号
 " " normal 模式下使用ctrl+n打开新标签也
 " " 标签页跳转：使用num ctrl+PgUp/PgDn进行tab切换
 " " 标签页跳转:使用Ctrl+Pgup/PgDn进行逐个标签切换
@@ -271,6 +296,8 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['pylint']
 " " : 配置pylint的参数
 let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
+" " 窗口大小设置
+let g:syntastic_loc_list_height=3
 " syntastic 配置
 " " 文件保存时的更新函数
 function! WriteUpdate()
