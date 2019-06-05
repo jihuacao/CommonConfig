@@ -67,8 +67,8 @@ imap <C-[> <Esc>
 " " 设置行列高亮
 set cursorcolumn
 set cursorline
-highlight CursorLine   cterm=NONE ctermbg=black ctermfg=green guibg=NONE guifg=NONE
-highlight CursorColumn cterm=NONE ctermbg=black ctermfg=green guibg=NONE guifg=NONE
+highlight CursorLine   cterm=NONE ctermbg=black ctermfg=blue guibg=NONE guifg=NONE
+highlight CursorColumn cterm=NONE ctermbg=black ctermfg=blue guibg=NONE guifg=NONE
 " " 设置行列高亮
 set nu!
 set ai
@@ -156,26 +156,36 @@ let g:NERDTreeIndicatorMapCustom = {
 " " 设置文件列表大小
 " nerdtree文件列表设置
 
+" " 通用缩进设置
+set tabstop=4
+			\ softtabstop=4
+			\ shiftwidth=4
+			\ textwidth=79
+			\ expandtab
+			\ autoindent
+			\ fileformat=unix
+" " 通用缩进设置
+
 " python设置
 au BufNewFile,BufRead *.py
 			\set tabstop=4
-			\set softtabstop=4
-			\set shiftwidth=4
-			\set textwidth=79
-			\set expandtab
-			\set autoindent
-			\set fileformat=unix
+			\ softtabstop=4
+			\ shiftwidth=4
+			\ textwidth=79
+			\ expandtab
+			\ autoindent
+			\ fileformat=unix
 " python设置
 
 " c++设置
-au BufNewFile,BufRead *.hpp, *.cpp, *.h, *.c, *.cc
-			\set tabstop=4
-			\set softtabstop=4
-			\set shiftwidth=4
-			\set textwidth=79
-			\set autoindent
-			\set cindent
-			\set fileformat=unix
+au BufNewFIle,BufRead *.hpp,*.cpp,*.h,*.c,*.cc 
+			\ set tabstop=4 
+			\ shiftwidth=4
+			\ softtabstop=4
+			\ textwidth=79
+			\ cindent
+			\ fileformat=unix
+			\ fileformat=unix
 " c++设置
 
 " ycm 通用设置
