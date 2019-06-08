@@ -32,6 +32,8 @@ Plugin 'vim-syntastic/syntastic.git'
 Plugin 'airblade/vim-gitgutter'
 " 代码片段插件
 Plugin 'SirVer/ultisnips'
+" " 代码片段资源库
+Plugin 'honza/vim-snippets'
 call vundle#end()            " 必须
 
 filetype on
@@ -213,8 +215,10 @@ let g:ycm_key_list_stop_completion=['<CR>']
 let g:ycm_semantic_triggers = {
 	\ 'c, python, cpp': ['re!\w{2}'],
 	\ }
-" " 设置python路径:mutable
+" " 设置解析补全的目标python路径 
 let g:ycm_python_binary_path='/home/sins/anaconda3/envs/356/bin/python'
+" " 设置ycm服务使用的是哪个python，这需要与ycm编译时以来的那个python版本一致
+let g:ycm_server_python_interpreter='/usr/bin/python'
 " " 错误诊断关闭
 let g:ycm_show_diagnostics_ui = 0
 " " 关闭补全框快捷
@@ -252,6 +256,14 @@ let g:ctrlp_match_window_reversed=0
 let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 " ctrlpvim/ctrlp.vim文件模糊搜索插件配置
+
+"" 代码片段配置
+let g:UltiSnipsJumpForwardTrigger="<c-k>"
+let g:UltiSnipsJumpBackwardTrigger="<c-j>"
+let g:UltiSnipsExpandTrigger="<c-tab>"
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsUsePythonVersion = 3
+"" 代码片段配置
 
 " tab 配置
 " " tab 打开新标签页
@@ -353,9 +365,9 @@ map <leader><F3> :TlistToggle<cr>
 
 " vdebug 配置
 " " 配置leader
-
 " " 配置leader
 " vdebug 配置
+
 " syntastic 配置
 " "
 set statusline+=%#warningmsg#
@@ -371,14 +383,29 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 " "
 let g:syntastic_check_on_wq = 0
+" " 配置python部分
 " " 配置python代码分析器，改分析器需要另外安装，syntastic主要是将分析器的分析信息在vim中进行可视化:mutable
 " " 为了支持多版本python，要在对应环境python进行pip安装pylint，在对应环境下运行pylint,才能使用对应环境的语法规范:mutable
-let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_checkers = ['flake8']
+" " :配置flake8的参数 flake8说明文档：http://flake8.pycqa.org/en/latest/
+" " " flake8 的id说明：
+" " "   E402: 没有在文件顶层进行import的错误
+" " "   F401: import but not used
+" " "   E201: has whitespace after (
+" " "   E202: has whitespace before )
+" " "   E501: line too long
+let g:syntastic_python_flake8_args='--ignore E402,F401,E201,E202,E501'
+" " 配置flake8的参数
 " " : 配置pylint的参数
 let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
+" " 配置python部分
+" " 配置CPP部分
+let g:syntastic_python_checkers = ['clang']
+" " 配置CPP部分
 " " 窗口大小设置
 let g:syntastic_loc_list_height=3
 " syntastic 配置
+
 " " 文件保存时的更新函数
 function! WriteUpdate()
 	:TlistUpdate
