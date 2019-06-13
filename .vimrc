@@ -34,6 +34,13 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'SirVer/ultisnips'
 " " 代码片段资源库
 Plugin 'honza/vim-snippets'
+" Add maktaba and bazel to the runtimepath.
+" (The latter must be installed before it can be used.)
+Plugin 'google/vim-maktaba'
+" 运行shell命令时的插件
+Plugin 'skywind3000/asyncrun.vim'
+
+
 call vundle#end()            " 必须
 
 filetype on
@@ -167,6 +174,17 @@ set tabstop=4
 			\ autoindent
 			\ fileformat=unix
 " " 通用缩进设置
+
+"" " BUILD设置
+"au BufNewFile,BufRead BUILD
+"			\set tabstop=4
+"			\ softtabstop=4
+"			\ shiftwidth=4
+"			\ textwidth=79
+"			\ expandtab
+"			\ autoindent
+"			\ fileformat=unix
+"" " BUILD设置
 
 " python设置
 au BufNewFile,BufRead *.py
@@ -412,3 +430,13 @@ function! WriteUpdate()
 endfunction
 autocmd BufWritePost *.c,*.h,*.cpp,*.py,*.cc call WriteUpdate()
 " " 文件保存时的更新函数
+
+" " 配置asyncrun
+" " "使用AsyncRun + command就会在分窗口中执行命令
+" " 自动打开 quickfix window ，高度为 6
+let g:asyncrun_open = 6
+" " 任务结束时候响铃提醒
+let g:asyncrun_bell = 1
+" " 设置 F10 打开/关闭 Quickfix 窗口
+nnoremap leader+<F10> :call asyncrun#quickfix_toggle(6)<cr>Plugin 'bazelbuild/vim-bazel'
+" 配置asyncrun
