@@ -209,6 +209,10 @@ au BufNewFIle,BufRead *.hpp,*.cpp,*.h,*.c,*.cc
 " c++设置
 
 " ycm 通用设置
+" " ycm 列表移动选取，向下
+let g:ycm_key_list_select_completion = ['<c-u>', '<Down>']
+" " ycm 列表移动选取， 向上
+let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>']
 " " 让vim自动加载ycm配置文件，不再提示询问是否加载
 let g:ycm_confirm_extra_conf=0  
 " " 让vim自动加载ycm配置文件，不再提示询问是否加载
@@ -275,13 +279,19 @@ let g:ctrlp_mruf_max=500
 let g:ctrlp_follow_symlinks=1
 " ctrlpvim/ctrlp.vim文件模糊搜索插件配置
 
-"" 代码片段配置
-let g:UltiSnipsJumpForwardTrigger="<c-k>"
-let g:UltiSnipsJumpBackwardTrigger="<c-j>"
-let g:UltiSnipsExpandTrigger="<c-tab>"
+" vim帮助文档说明
+" " 在指定关键字上按下shift+k能够打开说明
+" vim帮助文档说明
+
+" 代码片段配置
+" " 代码片段选择，由于在ycm中配置了列表的选择，使用Ctrl+u向下选，使用Ctrl+p向上选,此处无需再进行配置
+"let g:UltiSnipsJumpForwardTrigger="<c-z>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+" " 当选到对应的snip时，按下tab键会进行展开 
+let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsUsePythonVersion = 3
-"" 代码片段配置
+" 代码片段配置
 
 " tab 配置
 " " tab 打开新标签页
