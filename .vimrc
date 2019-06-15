@@ -285,11 +285,12 @@ let g:ctrlp_follow_symlinks=1
 
 " 代码片段配置
 " " 代码片段选择，由于在ycm中配置了列表的选择，使用Ctrl+u向下选，使用Ctrl+p向上选,此处无需再进行配置
-"let g:UltiSnipsJumpForwardTrigger="<c-z>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+" 以下配置占位符锁定，当代码片段有多个占位符输入时,通过tab锁定下一个，通过shift+tab锁定上一个
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " " 当选到对应的snip时，按下tab键会进行展开 
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsEditSplit="normal"
 let g:UltiSnipsUsePythonVersion = 3
 " 代码片段配置
 
