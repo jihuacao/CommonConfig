@@ -39,8 +39,6 @@ Plugin 'honza/vim-snippets'
 Plugin 'google/vim-maktaba'
 " 运行shell命令时的插件
 Plugin 'skywind3000/asyncrun.vim'
-
-
 call vundle#end()            " 必须
 
 filetype on
@@ -290,7 +288,10 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
 " " 当选到对应的snip时，按下tab键会进行展开 
 let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsEditSplit="normal"
+" " while use :UltiSnipsEdit, the file would be opened vertical
+let g:UltiSnipsEditSplit="vertical"
+" " 设置个人代码片段库 个人的代码片段库必须存放到~/.vim/下才会有效
+let g:UltiSnipSSnippetDirectories=['~/.vim/UltiSnips']
 let g:UltiSnipsUsePythonVersion = 3
 " 代码片段配置
 
