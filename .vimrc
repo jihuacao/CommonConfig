@@ -282,6 +282,9 @@ let g:ctrlp_follow_symlinks=1
 " vim帮助文档说明
 
 " 代码片段配置
+" " 相关说明
+" " "关于实时更新的问题：当你在文件编辑状态中，去更改snippets文件的内容,更改已存在的snippet是会实时更新的，但是如果是增加snippet则不会实时更新
+" "
 " " 代码片段选择，由于在ycm中配置了列表的选择，使用Ctrl+u向下选，使用Ctrl+p向上选,此处无需再进行配置
 " 以下配置占位符锁定，当代码片段有多个占位符输入时,通过tab锁定下一个，通过shift+tab锁定上一个
 let g:UltiSnipsJumpForwardTrigger="<tab>"
