@@ -39,6 +39,8 @@ Plugin 'honza/vim-snippets'
 Plugin 'google/vim-maktaba'
 " 运行shell命令时的插件
 Plugin 'skywind3000/asyncrun.vim'
+" mark显示
+Plugin 'kshenoy/vim-signature' 
 call vundle#end()            " 必须
 
 filetype on
