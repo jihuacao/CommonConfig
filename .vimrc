@@ -296,7 +296,8 @@ let g:UltiSnipsExpandTrigger="<tab>"
 " " while use :UltiSnipsEdit, the file would be opened vertical
 let g:UltiSnipsEditSplit="vertical"
 " " 设置个人代码片段库 个人的代码片段库必须存放到~/.vim/下才会有效
-let g:UltiSnipSSnippetDirectories=['~/.vim/UltiSnips']
+let g:UltiSnipSSnippetDirectories=['~/.vim/UltiSnips', '~/.vim/snippets']
+" " vim 使用的python版本
 let g:UltiSnipsUsePythonVersion = 3
 " 代码片段配置
 
