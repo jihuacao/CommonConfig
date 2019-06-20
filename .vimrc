@@ -257,6 +257,8 @@ let g:ycm_filetype_whitelist = {
 			\ "sh":1,
 			\ "zsh":1,
 			\ "zimbu":1,
+            \ "bzl":1,
+            \ "cmake":1,
 			\ }
 " " 设置白名单列表
 " ycm 通用设置
@@ -296,6 +298,7 @@ let g:UltiSnipsExpandTrigger="<tab>"
 " " while use :UltiSnipsEdit, the file would be opened vertical
 let g:UltiSnipsEditSplit="vertical"
 " " 设置个人代码片段库 个人的代码片段库必须存放到~/.vim/下才会有效
+" " 由于与ycm共用模块，因此想支持的文件类型需要在ycm白名单中添加类型
 let g:UltiSnipSSnippetDirectories=['~/.vim/UltiSnips', '~/.vim/snippets']
 " " vim 使用的python版本
 let g:UltiSnipsUsePythonVersion = 3
