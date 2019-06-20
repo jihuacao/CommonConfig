@@ -146,5 +146,5 @@ function parse_git_dirty {
     fi
 }
 
-PS1="\[\e[1;35m\]\u:\[\e[1;32m\]\w:\[\e[1;36m\]$(git_branch)\[\033[0;31m\]$(parse_git_dirty)\[\033[0m\]$ ";
+PS1="\[\e[1;35m\]\u\[\e[1;32m\]\w\[\e[0m\]\[\e[0m\]\[\e[1;36m\]\$(git_branch)\[\033[0;31m\]\$(parse_git_dirty)\[\033[0m\]\$ ";
 #git 相关信息在terminal中的显示
