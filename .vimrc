@@ -403,6 +403,32 @@ map <leader><F3> :TlistToggle<cr>
 " taglist配置
 
 " vdebug 配置
+" " 用于debug python
+"3.2 Python set up                                          *VdebugSetUpPython*
+"
+"Python has an standalone debugging tool that you can use from the command line,
+"but to use Vdebug in conjunction with your Python scripts you will have to grab
+"the "pydbgp" tool, created by ActiveState (who make the Komodo Edit/IDE
+"software).
+"
+"To do this, go to http://code.activestate.com/komodo/remotedebugging/,
+"download the Python client for your OS and extract it.
+"
+"Inside this package is a binary file called pydbgp that we can include when
+"running a script, which will allow for remote debugging. If you're using
+"version 8 or greater, then you will need to move the dbgp directory, which is
+"inside pythonlib, to the same directory that contains the pydbgp executable.
+"If you don't do this then you will get an error saying "No module named
+"dbgp.client".
+"以上说明，vdebug只是一个前端，如果debug python需要下载一个真正的debug工具，
+"需要按照说明下载komod
+"在程序中 启动vdebug，默认是F5,此处应该可以设定监控端口
+"debug，vdebug会自动监控9000端口，然后解析到vim前端，这意味着需要调用komodo进行python debug，
+"To debug a script called "myscript.py", run the following: >
+"    python -S path/to/pydbgp -d localhost:9000 myscript.py
+"说明需要调用komodo中的pydgp工具,然后绑定输出为9000端口，myscript.py为目标debug文件
+"重要点：如果python3 debug使用python3中的pydbg，python2使用python2
+" " 用于debug python
 " " 配置leader
 " " 配置leader
 " vdebug 配置
