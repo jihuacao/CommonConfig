@@ -40,7 +40,7 @@ Plugin 'google/vim-maktaba'
 " 运行shell命令时的插件
 Plugin 'skywind3000/asyncrun.vim'
 " mark显示
-Plugin 'kshenoy/vim-signature' 
+Plugin 'kshenoy/vim-signature'
 call vundle#end()            " 必须
 
 filetype on
@@ -84,9 +84,9 @@ set ai
 syntax on 
 set background=dark
 set encoding=utf-8
-" " 
+" "
 set list
-set listchars=tab:>-,trail:-
+set lcs=tab:-->,space:~,trail:$,extends:>,precedes:<
 " "
 " " 设置缩进
 set foldenable
@@ -228,10 +228,10 @@ let g:ycm_confirm_extra_conf=0
 let g:ycm_goto_buffer_command = 'horizontal-split'
 " " 跳转时自动水平分屏
 " " 开启 YCM 标签补全引擎
-let g:ycm_collect_identifiers_from_tags_files=1 
+let g:ycm_collect_identifiers_from_tags_files=1
 " " 开启 YCM 标签补全引擎
 " " 补全功能在注释中同样有效
-let g:ycm_complete_in_comments=1                  
+let g:ycm_complete_in_comments=1
 " " 补全功能在注释中同样有效
 " " 快捷键Alt-q实现关闭提示框功能
 let g:ycm_key_list_stop_completion=['<CR>']
