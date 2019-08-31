@@ -443,7 +443,8 @@ let g:syntastic_python_checkers = ['flake8']
 " " "   E201: has whitespace after (
 " " "   E202: has whitespace before )
 " " "   E501: line too long
-let g:syntastic_python_flake8_args='--ignore E402,F401,E201,E202,E501'
+" " "   E266: too many leading '#'
+let g:syntastic_python_flake8_args='--ignore E402,F401,E201,E202,E501,E266'
 " " 配置flake8的参数
 " " : 配置pylint的参数
 let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
