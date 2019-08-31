@@ -84,6 +84,18 @@ set ai
 syntax on 
 set background=dark
 set encoding=utf-8
+" " 
+set list
+set listchars=tab:>-,trail:-
+" "
+" " 设置缩进
+set foldenable
+" " " indent 方式判断折叠
+set foldmethod=indent
+set foldcolumn=0
+setlocal foldlevel=20
+set foldlevelstart=20
+" " 设置缩进
 " "窗口切换快捷键设置
 " "Ctrl+方向键进行窗口切换 
 set splitbelow
