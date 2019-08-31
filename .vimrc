@@ -438,13 +438,14 @@ let g:syntastic_python_flake8_checkers = 'flake8'
 let g:syntastic_python_checkers = ['flake8']
 " " :配置flake8的参数 flake8说明文档：http://flake8.pycqa.org/en/latest/
 " " " flake8 的id说明：
+" " "   F841: local variable is assigned to but never used
 " " "   E402: 没有在文件顶层进行import的错误
 " " "   F401: import but not used
 " " "   E201: has whitespace after (
 " " "   E202: has whitespace before )
 " " "   E501: line too long
 " " "   E266: too many leading '#'
-let g:syntastic_python_flake8_args='--ignore E402,F401,E201,E202,E501,E266'
+let g:syntastic_python_flake8_args='--ignore F841,E402,F401,E201,E202,E501,E266'
 " " 配置flake8的参数
 " " : 配置pylint的参数
 let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
