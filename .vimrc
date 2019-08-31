@@ -86,7 +86,7 @@ set background=dark
 set encoding=utf-8
 " "
 set list
-set lcs=tab:-->,space:~,trail:$,extends:>,precedes:<
+set lcs=tab:-->,space:`,trail:$,extends:>,precedes:<
 " "
 " " 设置缩进
 set foldenable
