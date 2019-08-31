@@ -169,7 +169,6 @@ let g:NERDTreeIndicatorMapCustom = {
 set tabstop=4
 			\ softtabstop=4
 			\ shiftwidth=4
-			\ textwidth=79
 			\ expandtab
 			\ autoindent
 			\ fileformat=unix
@@ -180,7 +179,6 @@ set tabstop=4
 "			\set tabstop=4
 "			\ softtabstop=4
 "			\ shiftwidth=4
-"			\ textwidth=79
 "			\ expandtab
 "			\ autoindent
 "			\ fileformat=unix
@@ -191,7 +189,6 @@ au BufNewFile,BufRead *.py
 			\set tabstop=4
 			\ softtabstop=4
 			\ shiftwidth=4
-			\ textwidth=79
 			\ expandtab
 			\ autoindent
 			\ fileformat=unix
@@ -202,7 +199,6 @@ au BufNewFIle,BufRead *.hpp,*.cpp,*.h,*.c,*.cc
 			\ set tabstop=4 
 			\ shiftwidth=4
 			\ softtabstop=4
-			\ textwidth=79
 			\ cindent
 			\ fileformat=unix
 			\ fileformat=unix
@@ -403,6 +399,19 @@ map <leader><F3> :TlistToggle<cr>
 " taglist配置
 
 " vdebug 配置
+" 打开
+" " 键位
+
+let g:vdebug_keymap = {
+\    "get_context" : "<F4>",
+\}
+" " " F2 step over; F3 step into; F4 step out; F5 start debug/run; F6 stop; F9 run to cursor; F10 set break; F12 eval at the cursor;
+" " 键位
+" " VdebugEval
+" " " 使用:VdebugEval <code>来eval任何变量，结果在VdebugWatchWindow中显示，如想回到VdebugWatchWindow中则使用:VdebugEval!
+" " " 或者使用:VdebugTrace <code>新建一个分割窗口显示Eval结果
+" " VdebugEval
+" "当使用eval进行查看变量值时可能出现错误，阅读vdebug帮助文档，help vdebugSetupPython, 查看相关内容，会有个patch地址，链接里面有提供解决方案
 " " 配置leader
 " " 配置leader
 " vdebug 配置
@@ -425,6 +434,7 @@ let g:syntastic_check_on_wq = 0
 " " 配置python部分
 " " 配置python代码分析器，改分析器需要另外安装，syntastic主要是将分析器的分析信息在vim中进行可视化:mutable
 " " 为了支持多版本python，要在对应环境python进行pip安装pylint，在对应环境下运行pylint,才能使用对应环境的语法规范:mutable
+let g:syntastic_python_flake8_checkers = 'flake8'
 let g:syntastic_python_checkers = ['flake8']
 " " :配置flake8的参数 flake8说明文档：http://flake8.pycqa.org/en/latest/
 " " " flake8 的id说明：
@@ -439,7 +449,13 @@ let g:syntastic_python_flake8_args='--ignore E402,F401,E201,E202,E501'
 let g:syntastic_python_pylint_args='--disable=C0111,R0903,C0301'
 " " 配置python部分
 " " 配置CPP部分
-let g:syntastic_python_checkers = ['clang']
+" " 使用python安装cpplint
+" " " 配置cpplint的路径
+let g:syntastic_cpp_cpplint_exec = "cpplint"
+let g:syntastic_cpp_checkers = ['cpplint']
+" " " 使用clang无法使用，预计原因：是调用python的clang，而环境中存在clang编译器
+"let g:syntastic_cpp_clang_exec = 'clang'
+"let g:syntastic_cpp_checkers = ['clang']
 " " 配置CPP部分
 " " 窗口大小设置
 let g:syntastic_loc_list_height=3
