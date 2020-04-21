@@ -4,6 +4,7 @@
     "local_port":1080,
     "port_password":{
         "19000":"renburugou",
+        "18999":"renburugou",
         "18888":"renburugou",
         "18889":"renburugou"
     },
