@@ -1,0 +1,3 @@
+安装shadowsocks：pip install shadowsocks
+拷贝ss-config.json到/etc/中，进行对应的修改
+拷贝shadowsocks-server.service到/etc/systemd/system/中，进行对应的修改
