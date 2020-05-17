@@ -1,6 +1,6 @@
 {
   "listen": ":18893",
-  "target": "45.76.105.116:18894",
+  "target": "target_ip:18894",
   "key": "renburugou",
   "crypt": "none",
   "mode": "fast",
