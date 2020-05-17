@@ -5,8 +5,16 @@
     "port_password":{
         "19000":"renburugou",
         "18999":"renburugou",
+
         "18888":"renburugou",
-        "18889":"renburugou"
+        "18890":"renburugou",
+        "18892":"renburugou",
+        "18894":"renburugou",
+        "18896":"renburugou",
+        "18898":"renburugou",
+        "18900":"renburugou",
+        "18902":"renburugou",
+        "18904":"renburugou"
     },
     "timeout":300,
     "method":"rc4-md5",

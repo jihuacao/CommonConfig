@@ -1,5 +1,5 @@
 {
-  "listen": ":18887",
+  "listen": ":18893",
   "target": "45.76.105.116:18888",
   "key": "renburugou",
   "crypt": "none",
@@ -15,3 +15,4 @@
   "tcp": false,
   "pprof": false
 }
+
