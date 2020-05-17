@@ -1,6 +1,6 @@
 {
   "listen": ":18901",
-  "target": "45.76.105.116:18888",
+  "target": "45.76.105.116:18902",
   "key": "renburugou",
   "crypt": "none",
   "mode": "fast",
