@@ -1,0 +1,6 @@
+使用kcptun客户端：
+    将kcptun-client-config-*.json拷贝到/usr/local/kcptun中，更改其中的target_ip即可
+    将kcptun-client-*.service拷贝到/etc/systemd/system中
+
+
+然后就是服务的激活了

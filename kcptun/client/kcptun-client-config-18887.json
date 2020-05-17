@@ -1,0 +1,18 @@
+{
+  "localaddr": ":18887",
+  "remoteaddr": "target_ip:18887",
+  "key": "renburugou",
+  "crypt": "none",
+  "mode": "fast",
+  "mtu": 1350,
+  "sndwnd": 512,
+  "rcvwnd": 512,
+  "datashard": 10,
+  "parityshard": 3,
+  "dscp": 0,
+  "nocomp": true,
+  "quiet": false,
+  "tcp": false,
+  "pprof": false
+}
+

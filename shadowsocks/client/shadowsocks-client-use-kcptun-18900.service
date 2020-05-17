@@ -1,0 +1,14 @@
+[Unit]
+Description=shadowsocks-client-use-kcptun-18900 service
+After=network.target
+
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/sslocal -c /etc/shadowsocks/ss-client-use-kcptun-config-18900.json start &
+
+
+[Install]
+WantedBy=multi-user.target
+

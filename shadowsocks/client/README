@@ -1,0 +1,10 @@
+使用shadowsocks的客户端：
+    将ss-client-config.json拷贝到/etc/shadowsocks/中, 替换其中的target_ip即可
+    将shadowsocks-client.service拷贝到/etc/systemd/system中
+
+使用kcptun的shadowsocks客户端：
+    将ss-client-use-kcptun-config-*.json拷贝到/etc/shadowsocks中
+    将shadowsocks-client-use-kcptun-*.service拷贝到/etc/systemc/system中
+
+
+然后就是服务激活操作了
