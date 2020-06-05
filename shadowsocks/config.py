@@ -55,7 +55,6 @@ if options.ConfigServer is True:
         "After=network.target \n" \
         "[Service] \n" \
         "ExecStart=/usr/local/bin/ssserver -c {0}\n" \
-        "restart=always" \
         "[Install] \n" \
         "WantedBy=multi-user.target \n".format('{0}', '{1}')
 
