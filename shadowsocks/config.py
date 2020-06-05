@@ -75,25 +75,25 @@ if options.ConfigServer is True:
     base_server_config['port_password'] = {}
     for tp in options.ServerPort:
         base_server_config['port_password'][tp] = "renburugou"
-
-        def save_config_to_json(server_config_file_path, config):
-            with open(server_config_file_path, 'w') as fp:
-                json.dump(config, fp, indent=4)
-            pass
-        server_config_file_path = os.path.join(options.ServerConfigPath, 'shadowsocks-server-config.json')
-        print('server_config save to {0}'.format(server_config_file_path))
-        save_config_to_json(server_config_file_path, base_server_config) if options.Test is False else None
-
-        def save_server_service(server_service_file_path, server_service):
-            with open(server_service_file_path, 'w') as fp:
-                fp.write(server_service)
-                pass
-            pass
-        server_service = base_server_service.format(os.path.abspath(server_config_file_path))
-        server_service_file_path = os.path.join(options.ServerServiceDir, 'shadowsocks-server.service')
-        print('server_service save to {0}'.format(server_service_file_path))
-        save_server_service(server_service_file_path, server_service) if options.Test is False else None
         pass
+
+    def save_config_to_json(server_config_file_path, config):
+        with open(server_config_file_path, 'w') as fp:
+            json.dump(config, fp, indent=4)
+        pass
+    server_config_file_path = os.path.join(options.ServerConfigPath, 'shadowsocks-server-config.json')
+    print('server_config save to {0}'.format(server_config_file_path))
+    save_config_to_json(server_config_file_path, base_server_config) if options.Test is False else None
+
+    def save_server_service(server_service_file_path, server_service):
+        with open(server_service_file_path, 'w') as fp:
+            fp.write(server_service)
+            pass
+        pass
+    server_service = base_server_service.format(os.path.abspath(server_config_file_path))
+    server_service_file_path = os.path.join(options.ServerServiceDir, 'shadowsocks-server.service')
+    save_server_service(server_service_file_path, server_service) if options.Test is False else None
+    print('server_service save to {0}'.format(server_service_file_path))
     pass
 
 if options.ConfigClient is True:
