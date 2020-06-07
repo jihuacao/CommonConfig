@@ -135,8 +135,8 @@ if options.ConfigClient is True:
             pass
 
         for lp, rp in zip(options.ClientLocalPort, options.ClientRemotePort):
-            base_client_config['local_port'] = ':{0}'.format(lp)
-            base_client_config['server_port'] = '{0}'.format(rp)
+            base_client_config['local_port'] = lp
+            base_client_config['server_port'] = rp
 
             def save_config_to_json(client_config_file_path, config):
                 with open(client_config_file_path, 'w') as fp:
@@ -192,8 +192,8 @@ if options.ConfigClient is True:
             pass
 
         for lp, cklp in zip(options.ClientLocalPort, options.ClientKcptunLocalPort):
-            base_client_config['local_port'] = ':{0}'.format(lp)
-            base_client_config['server_port'] = '{0}'.format(cklp)
+            base_client_config['local_port'] = lp
+            base_client_config['server_port'] = cklp
 
             def save_config_to_json(client_config_file_path, config):
                 with open(client_config_file_path, 'w') as fp:
