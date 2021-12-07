@@ -1,0 +1,9 @@
+运行kcptun.sh
+  随意配置，因为此处有kcptun的conf文件：server-config-*.json
+  成功安装kcptun：在/usr/local/kcptun
+  脚本会安装superivisord,用于控制kcptun服务，如果出现问题可以不使用：此处有kcptun的service文件：kcptun-server-*.service，用于systemctl机制
+拷贝server-config-*.json到/usr/local/kcptun中，没一个文件代表了没一个端口配置，进行ip的修改(perl -p -i -e "s/target_ip/真实ip/g" /usr/local/kcptun/server-config-* 进行批量替换)
+拷贝kcptun-server-*.service到/etc/systemd/system/中
+
+systemctl daemon-reload进行更新
+systemctl enable kcptun-server运行开机启动

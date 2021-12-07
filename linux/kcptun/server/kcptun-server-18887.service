@@ -1,0 +1,8 @@
+[Unit] 
+Description=Kcptun Server 
+After=network.target 
+[Service] 
+ExecStart=/usr/local/kcptun/server_linux_amd64 -c /usr/local/kcptun/server-config-18887.json
+[Install] 
+WantedBy=multi-user.target 
+

@@ -1,8 +1,0 @@
-[Unit] 
-Description=Shadowsocks Server 
-After=network.target 
-[Service] 
-ExecStart=/usr/local/bin/ssserver -c /etc/ss-service-config.json 
-Restart=always 
-[Install] 
-WantedBy=multi-user.target 
