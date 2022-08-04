@@ -4,13 +4,16 @@
 #     * 可以针对某个更改的Dockerfile.*.*进行测试
 ## Dockerfile命名格式使用[base|ops|dev|test].<version_id>.Dockerfile
 RootDir=$(cd $(dirname $0); pwd)
+ExecDir=$(pwd)
 DockerRoot=""
 ImagePrefix="cjh"
 ImageName=""
 UseGit=0
+BuildOptions=""
 usage(){
     echo 'help message'
     echo '主旨:补全multi_stage的功能，支持多个Dockerfile生成一个，达到多分枝的目的，同时避免由于修改layer而耗费大量时间'
+    echo 'dockerfile集合命名规范：<stage>.v<version>.Dockerfile'
     echo '--image-prefix 指定Image的前缀\n \
     ImagePrefix会使用image-prefix\n \
     生成的Image会以以下格式命名\n \
@@ -18,7 +21,9 @@ usage(){
     echo '--image-name 指定ImageName，默认为""'
     echo '--docker-root 指定存储Dockerfile的路径'
     echo '--target-stage 指定目标阶段base-ops-dev-test|base-ops-test|base-ops-dev'
+    echo '--target-version 指定目标文件版本（未支持）'
     echo '--use-git 使用git版本信息优化命名规则，前提是host上有git'
+    echo '--build-options 只能怪在build中使用的参数'
 }
 ARGS=`getopt \
     -o h\
@@ -28,6 +33,7 @@ ARGS=`getopt \
     --long image-name:: \
     --long target-stage:: \
     --long use-git \
+    --long build-options:: \
     -n 'example.bash' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
@@ -53,7 +59,10 @@ while true ; do
             echo "specify TargetStage as $2"; TargetStage=$2; shift 2
             ;;
         --use-git)
-            echo "git would be used"; UseGit=1
+            echo "git would be used"; UseGit=1; shift 1
+            ;;
+        --build-options)
+            echo "build options: $2"; BuildOptions=$2; shift 2
             ;;
         -h|--help) usage; exit 1;;
         --) shift 1; break;;
@@ -203,14 +212,66 @@ filter_by_target(){
     echo "${result}"
 }
 
-generate_full_image_name(){
+generate_tag(){
     files=($1)
-    image_prefix=$2
-    image_name=$3
-    use_git=$4
-    docker_root=$5
+    use_git=$2
+    docker_root=$3
 
-    echo $(cd ${docker_root}; git status)
+    version=""
+    newest_commit_id=""
+    state=""
+
+    # 确定文件标志版本
+    version=$(get_version ${files[${#files[@]}-1]})
+    # 确定目标Dockerfile列表中最晚commit的那个commit id（short）
+    commit_ids=($(echo $(cd ${docker_root}; git log --pretty=format:"%h" ./))) # 获取存储dockerfile目录的短commit id列表
+    for((i=0;i<${#commit_ids[@]}-1;i++)){
+        changed_files=($(echo $(cd ${docker_root}; git diff --no-commit-id --name-only --relative ${commit_ids[i+1]} ${commit_ids[i]} ./)))
+        for((j=0;j<${#changed_files[@]};j++)){
+            for((k=0;k<${#files[@]};k++)){
+                if [[ ${changed_files[j]} == ${files[k]} ]];then
+                    newest_commit_id=${commit_ids[i]}
+                    break
+                fi
+            }
+            if [[ ${newest_commit_id} != "" ]];then
+                break
+            fi
+        }
+        if [[ ${newest_commit_id} != "" ]];then
+            break
+        fi
+    }
+    # todo: 异常情况还得考虑
+    #   * 目标Dockerfile列表成员完全没有commit历史
+    #   * 目标Dockerfile列表成员只有一个commit历史(由于是通过两个commit id进行git-diff比较出来的，所以这种情况存在)
+    # **目前简单的将newest_commit_id置为none**
+    if [[ ${newest_commit_id} == "" ]]; then
+        newest_commit_id="none"
+        #if [[ ${#commit_ids[@]} -eq 0 ]]; then
+        #    newest_commit_id="none"
+        #elif [[ ${#commit_ids[@]} -eq 1 ]]; then
+        #    newest_commit_id=${commit_ids[0]}
+        #else
+        #    newest_commit_id
+        #fi
+        #newest_commit_id=${commit_ids}
+    fi
+    # 确定相关文件是否存在未commit更改
+    no_commited_files=($(cd ${docker_root}; git diff --no-commit-id --name-only --relative -r ./))
+    for((i=0;i<${#no_commited_files[@]};i++)){
+        for((j=0;j<${#files[@]};j++)){
+            if [[ ${no_commited_files[i]} == ${files[j]} ]]; then
+                state="uncommited"
+            fi
+        }
+    }
+    if [[ ${state} == "" ]]; then
+        state="commited"
+    fi
+
+    tag=${version}-${newest_commit_id}-${state}
+    echo ${tag} # debug
 }
 
 ##@brief
@@ -273,16 +334,21 @@ filter_by_target=($(filter_by_target "${one_temp}" "${two_temp}"))
 echo "filter by target stage: ${filter_by_target[@]}" # debug
 
 one_temp="${filter_by_target[@]}"
-generate_full_image_name "${one_temp}" "${ImagePrefix}" "${ImageName}" "${UseGit}" "${DockerRoot}"
+image_tag=$(generate_tag "${one_temp}" "${UseGit}" "${DockerRoot}")
+image_tag=${TargetStage}-${image_tag}
+echo "image tag: ${image_tag}" # debug
+full_image_name=${ImagePrefix}/${ImageName}:${image_tag}
+echo "full image name: ${full_image_name}"
 
-#for target in ${TargetStages[@]}; do
-#    echo "processing stage: ${target}"
-#    for file in ${files}; do
-#        if [[ ${file} MATCH ${target} ]]
-#    done
-#done
+# 生成临时整体Dockerfile
+temp_dockerfile="$(dirname ${DockerRoot})/.cache/${ImagePrefix}-${ImageName}-${image_tag}.Dockerfile"
+$(mkdir -p $(dirname ${temp_dockerfile}); rm ${temp_dockerfile} -f; touch ${temp_dockerfile})
+for((i=0;i<${#filter_by_target[@]};i++)){
+    echo "writ ${DockerRoot}/${filter_by_target[i]} to ${temp_dockerfile}"
+    cat ${DockerRoot}/${filter_by_target[i]} >> ${temp_dockerfile}
+    echo "
+    " >> ${temp_dockerfile}
+}
 
-# todo: ImageTag=${version}.${git_commit-id}
-# todo: ImageName=ProjectRoot的文件夹名
-echo "todo: generate image ${ImagePrefix}/${ImageName}:${ImageTag} from \
-${BaseImageName}:${BaseImageTag} base on Dockerfile ${DockerfileDir}"
+# : 构建镜像
+$(DOCKER_BUILDKIT=1 docker build ${BuildOptions} -t ${full_image_name} -f ${temp_dockerfile} ${ExecDir})
