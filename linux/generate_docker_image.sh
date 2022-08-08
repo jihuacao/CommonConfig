@@ -21,7 +21,7 @@ usage(){
     echo '--image-name 指定ImageName，默认为""'
     echo '--docker-root 指定存储Dockerfile的路径'
     echo '--target-stage 指定目标阶段base-ops-dev-test|base-ops-test|base-ops-dev'
-    echo '--target-version 指定目标文件版本（未支持）'
+    echo '--target-version 指定目标文件版本'
     echo '--use-git 使用git版本信息优化命名规则，前提是host上有git'
     echo '--build-options 只能怪在build中使用的参数'
 }
@@ -32,6 +32,7 @@ ARGS=`getopt \
     --long image-prefix:: \
     --long image-name:: \
     --long target-stage:: \
+    --long target-version:: \
     --long use-git \
     --long build-options:: \
     -n 'example.bash' -- "$@"`
@@ -57,6 +58,9 @@ while true ; do
             ;;
         --target-stage)
             echo "specify TargetStage as $2"; TargetStage=$2; shift 2
+            ;;
+        --target-version)
+            echo "specify TargetVersion as $2"; TargetVersion=$2; shift 2
             ;;
         --use-git)
             echo "git would be used"; UseGit=1; shift 1
@@ -212,6 +216,25 @@ filter_by_target(){
     echo "${result}"
 }
 
+filter_by_version(){
+    files=($1)
+    version=$2
+    result=""
+    for((i=0;i<${#files[@]};i++)){
+        verf=$(get_version "${files[i]}")
+        #echo "verjp:${verjp}"
+        rel=$(version_comp "${verf}" "${version}")
+        if [[ ${rel} != "gt" ]]; then
+            if [[ ${result} == "" ]];then
+                result="${files[i]}"
+            else
+                result="${result} ${files[i]}"
+            fi
+        fi
+    }
+    echo "${result}"
+}
+
 generate_tag(){
     files=($1)
     use_git=$2
@@ -328,24 +351,34 @@ two_temp="${stage_order[@]}"
 sorted_by_stage=($(sort_by_stage "${one_temp}" "${two_temp}"))
 echo "sorted by stage: ${sorted_by_stage[@]}" # debug
 
+# 基于目标stage进行过滤
 one_temp="${sorted_by_stage[@]}"
 two_temp="${stage_order[@]}"
 filter_by_target=($(filter_by_target "${one_temp}" "${two_temp}"))
 echo "filter by target stage: ${filter_by_target[@]}" # debug
 
+# 基于目标version进行过滤
 one_temp="${filter_by_target[@]}"
+two_temp="${TargetVersion}"
+filter_by_version=($(filter_by_version "${one_temp}" "${two_temp}"))
+echo "filter by target version: ${filter_by_version[@]}" # debug
+
+# 生成镜像name:tag
+one_temp="${filter_by_version[@]}"
 image_tag=$(generate_tag "${one_temp}" "${UseGit}" "${DockerRoot}")
 image_tag=${TargetStage}-${image_tag}
 echo "image tag: ${image_tag}" # debug
 full_image_name=${ImagePrefix}/${ImageName}:${image_tag}
 echo "full image name: ${full_image_name}"
 
+final_target=(${filter_by_version[@]})
+
 # 生成临时整体Dockerfile
 temp_dockerfile="$(dirname ${DockerRoot})/.cache/${ImagePrefix}-${ImageName}-${image_tag}.Dockerfile"
 $(mkdir -p $(dirname ${temp_dockerfile}); rm ${temp_dockerfile} -f; touch ${temp_dockerfile})
-for((i=0;i<${#filter_by_target[@]};i++)){
-    echo "writ ${DockerRoot}/${filter_by_target[i]} to ${temp_dockerfile}"
-    cat ${DockerRoot}/${filter_by_target[i]} >> ${temp_dockerfile}
+for((i=0;i<${#final_target[@]};i++)){
+    echo "write ${DockerRoot}/${final_target[i]} to ${temp_dockerfile}"
+    cat ${DockerRoot}/${final_target[i]} >> ${temp_dockerfile}
     echo "
     " >> ${temp_dockerfile}
 }
