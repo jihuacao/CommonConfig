@@ -174,23 +174,23 @@ sort_by_stage(){
     local files=($1)
     local target_stage_order=($2)
     for((i=0;i<${#files[@]};i++)){
-        for((j=0;j<${#files[@]}-1-i;j++)){
-            verj=$(get_version "${files[j]}")
-            verjp=$(get_version "${files[j+1]}")
+        for((j=i;j<${#files[@]};j++)){
+            verj=$(get_version "${files[i]}")
+            verjp=$(get_version "${files[j]}")
             # echo "${files[j]} vs ${files[j+1]}" # debug
             vrel=$(version_comp "${verj}" "${verjp}")
             if [[ ${vrel} != "eq" ]]; then
                 break
             fi
-            stagej=$(get_stage "${files[j]}")
-            stagejp=$(get_stage "${files[j+1]}")
+            stagej=$(get_stage "${files[i]}")
+            stagejp=$(get_stage "${files[j]}")
             three_temp="${target_stage_order[@]}"
             srel=$(stage_comp "${stagej}" "${stagejp}" "${three_temp}")
             # echo "${srel} ${files[j]} vs ${files[j+1]}" # debug
             if [[ ${srel} == "gt" ]];then
-                tmp=${files[j]}
-                files[j]=${files[j+1]}
-                files[j+1]=$tmp
+                tmp=${files[i]}
+                files[i]=${files[j]}
+                files[j]=$tmp
             fi
         }
     }
