@@ -9,7 +9,13 @@ DockerRoot=""
 ImagePrefix="cjh"
 ImageName=""
 UseGit=0
+StageKeepInVersionFilter=()
 BuildOptions=""
+params=""
+for x in "$*"; do
+    params="${params}${x}"
+done
+called="call: bash ${0} ${params}"
 usage(){
     echo 'help message'
     echo '主旨:补全multi_stage的功能，支持多个Dockerfile生成一个，达到多分枝的目的，同时避免由于修改layer而耗费大量时间'
@@ -23,6 +29,7 @@ usage(){
     echo '--target-stage 指定目标阶段base-ops-dev-test|base-ops-test|base-ops-dev'
     echo '--target-version 指定目标文件版本'
     echo '--use-git 使用git版本信息优化命名规则，前提是host上有git'
+    echo '--stage-keep-in-version-filter 指定stage不会被version_filter过滤掉'
     echo '--build-options 只能怪在build中使用的参数'
 }
 ARGS=`getopt \
@@ -35,6 +42,7 @@ ARGS=`getopt \
     --long target-version:: \
     --long use-git \
     --long build-options:: \
+    --long stage-keep-in-version-filter:: \
     -n 'example.bash' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
@@ -68,6 +76,8 @@ while true ; do
         --build-options)
             echo "build options: $2"; BuildOptions=$2; shift 2
             ;;
+        --stage-keep-in-version-filter)
+            echo "add stage keep in version filter: $2"; StageKeepInVersionFilter=($2 "${StageKeepInVersionFilter[@]}"); shift 2 ;;
         -h|--help) usage; exit 1;;
         --) shift 1; break;;
         -) shift 1; break;;
@@ -221,6 +231,17 @@ filter_by_version(){
     version=$2
     result=""
     for((i=0;i<${#files[@]};i++)){
+        stage=$(get_stage "${files[i]}")
+        keep=0
+        for((j=0;j<${#StageKeepInVersionFilter[@]};j++)){
+            if [[ ${stage} == ${StageKeepInVersionFilter[j]} ]]; then
+                keep=1
+            fi
+        }
+        if [[ ${keep} == "1" ]]; then
+            result="${result} ${files[i]}"
+            continue
+        fi
         verf=$(get_version "${files[i]}")
         #echo "verjp:${verjp}"
         rel=$(version_comp "${verf}" "${version}")
@@ -334,6 +355,26 @@ check_newest(){
     echo ""
 }
 
+# important: 注意read line将文件中的字符\(backslash)视为同一行(这里使用read -r取消\作为换行符，否则会被拼接起来)
+extract_file(){
+    source=$1
+    target=$2
+    extracted=""
+    # important: 由于while do结构是当下一行存在时才写入这一行，会漏写最后一行，因此增加了|| [ -n "$line" ]
+    cat ${source} | while read -r line || [ -n "$line" ]
+    do
+        result=$(echo ${line}|grep "@import:")
+        if [[ ${result} != "" ]]; then
+            echo "get the import: $line"
+            file=${line##"@import:"}
+            echo "# extract ${DockerRoot}/${file} to ${target}" >> ${target}
+            file_extracted=$(extract_file ${DockerRoot}/${file} $target)
+        else
+            echo $line >> $target
+        fi
+    done
+}
+
 stage_order=(${TargetStage//-/ })
 echo "stage order: ${stage_order[@]}"
 
@@ -378,10 +419,13 @@ temp_dockerfile="$(dirname ${DockerRoot})/.cache/${ImagePrefix}-${ImageName}-${i
 $(mkdir -p $(dirname ${temp_dockerfile}); rm ${temp_dockerfile} -f; touch ${temp_dockerfile})
 for((i=0;i<${#final_target[@]};i++)){
     echo "write ${DockerRoot}/${final_target[i]} to ${temp_dockerfile}"
-    cat ${DockerRoot}/${final_target[i]} >> ${temp_dockerfile}
+    extract_file ${DockerRoot}/${final_target[i]} ${temp_dockerfile}
+    #cat ${DockerRoot}/${final_target[i]} >> ${temp_dockerfile}
     echo "
-    " >> ${temp_dockerfile}
+# ${DockerRoot}/${final_target[i]} to ${temp_dockerfile} done" >> ${temp_dockerfile}
 }
+echo "
+#${called}" >> ${temp_dockerfile}
 
 # : 构建镜像
 $(DOCKER_BUILDKIT=1 docker build ${BuildOptions} -t ${full_image_name} -f ${temp_dockerfile} ${ExecDir})
