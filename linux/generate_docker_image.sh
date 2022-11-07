@@ -214,6 +214,7 @@ filter_by_target(){
     files=($1)
     stages=($2)
     result=""
+    remained_stage=(${stage[@]})
     for((i=0;i<${#files[@]};i++)){
         stage=$(get_stage "${files[i]}")
         for((j=0;j<${#stages[@]};j++)){
@@ -222,10 +223,22 @@ filter_by_target(){
                     result="${files[i]}"
                 else
                     result="${result} ${files[i]}"
+                    for((k=0;k<${#remained_stage[@]};k++)){
+                        if [[ ${stage} == ${remained_stage[k]} ]];then
+                            unset remained_stage[k]
+                            remained_stage=(${remained_stage[@]})
+                        fi
+                    }
                 fi
             fi
         }
     }
+    # todo: 如果存在残留则退出脚本并且打印残留目标
+    #exit 1
+    #if [[ "${remained_stage[@]}" != "" ]];then
+    #    echo "${remained_stage[@]} not found"
+    #    exit 1
+    #fi
     echo "${result}"
 }
 
