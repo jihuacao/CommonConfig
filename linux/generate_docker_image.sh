@@ -107,7 +107,7 @@ get_type(){
 # @note 返回Dockerfile的版本
 get_version(){
     file_name="$1"
-    vd=$(echo ${file_name##*v}) # 贪婪从匹配字符"v"开始向左删除字符串
+    vd=$(echo ${file_name##*.v}) # 贪婪从匹配字符"v"开始向左删除字符串
     v=$(echo ${vd%.Dockerfile*}) # 非贪婪从匹配字符".Dockerfile"开始向右删除字符串
     echo "${v}"
 }
@@ -143,6 +143,9 @@ sort_by_version(){
         for((j=0;j<${#files[@]}-i-1;j++)){
             verj=$(get_version "${files[j]}")
             #echo "verj:${verj}"
+            #if [[ ${verj} == "" ]]; then
+            #    continue
+            #fi
             verjp=$(get_version "${files[j+1]}")
             #echo "verjp:${verjp}"
             rel=$(version_comp "${verj}" "${verjp}")
