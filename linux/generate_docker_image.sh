@@ -381,6 +381,7 @@ extract_file(){
     do
         result=$(echo ${line}|grep "@import:")
         if [[ ${result} != "" ]]; then
+        #if [[ "${line}" =~ "^@import:.*" ]]; then
             echo "get the import: $line"
             file=${line##"@import:"}
             echo "# extract ${DockerRoot}/${file} to ${target}" >> ${target}
