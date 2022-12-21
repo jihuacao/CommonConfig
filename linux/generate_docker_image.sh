@@ -444,5 +444,7 @@ for((i=0;i<${#final_target[@]};i++)){
 echo "
 #${called}" >> ${temp_dockerfile}
 
+echo "
+# build: DOCKER_BUILDKIT=1 docker build ${BuildOptions} -t ${full_image_name} -f ${temp_dockerfile} ${ExecDir}" >> ${temp_dockerfile}
 # : 构建镜像
 $(DOCKER_BUILDKIT=1 docker build ${BuildOptions} -t ${full_image_name} -f ${temp_dockerfile} ${ExecDir})
