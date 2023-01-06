@@ -1,9 +1,8 @@
 IP=$1
 
-apt install python
-apt install python-pip
+apt -y install python
+apt -y install python-pip
 pip install --upgrade pip
-
 pip install shadowsocks==2.8.2
 sed -i 's/EVP_CIPHER_CTX_cleanup/EVP_CIPHER_CTX_reset/' /usr/local/lib/python2.7/dist-packages/shadowsocks/crypto/openssl.py
 
