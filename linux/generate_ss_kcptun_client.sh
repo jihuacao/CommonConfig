@@ -101,5 +101,14 @@ echo "[Service]" >> ${HOME}/ss-client/ss-client.service &&
 echo "ExecStart=sslocal -c ${HOME}/ss-client/ss-client-config.json" >> ${HOME}/ss-client/ss-client.service &&
 echo "[Install]" >> ${HOME}/ss-client/ss-client.service &&
 echo "WantedBy=multi-user.target" >> ${HOME}/ss-client/ss-client.service &&
-echo "nohup sslocal -c ${HOME}/ss-client/ss-client-config.json > ${HOME}/ss_client.log &" >> ${HOME}/start_ss_client.sh &&
+echo "nohup sslocal -c ${HOME}/ss-client/ss-client-config.json > ${HOME}/ss-client.log &" >> ${HOME}/start_ss_client.sh &&
 chmod +x ${HOME}/start_ss_client.sh
+
+sudo cp ${HOME}/ss-client/ss-client.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl stop ss-client.service
+systemctl start ss-client.service
+sudo cp ${HOME}/kcptun-client/kcptun-client.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl stop kcptun-client.service
+systemctl start kcptun-client.service
