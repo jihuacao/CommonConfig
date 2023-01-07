@@ -56,7 +56,7 @@ mkdir -p ${HOME}/kcptun-client/ &&
 cp linux/kcptun/client_linux_amd64 ${HOME}/kcptun-client/ &&
 chmod +x ${HOME}/kcptun-client/client_linux_amd64 &&
 echo "{" >> ${HOME}/kcptun-client/kcptun-client-config.json &&
-echo "    \"localaddr\": \"${kcptunLocalPort}\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
+echo "    \"localaddr\": \":${kcptunLocalPort}\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"remoteaddr\": \"${remoteIP}:${kcptunRemotePort}\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"key\": \"renburugou\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"crypt\": \"none\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
@@ -67,19 +67,19 @@ echo "    \"rcvwnd\": 512," >> ${HOME}/kcptun-client/kcptun-client-config.json &
 echo "    \"datashard\": 10," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"parityshard\": 3," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"dscp\": 0," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
-echo "    \"nocomp\": True," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
-echo "    \"quiet\": False," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
-echo "    \"tcp\": False," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
-echo "    \"pprof\": False" >> ${HOME}/kcptun-client/kcptun-client-config.json &&
+echo "    \"nocomp\": true," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
+echo "    \"quiet\": false," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
+echo "    \"tcp\": false," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
+echo "    \"pprof\": false" >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "}" >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "[Unit]" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "Description=kcptun client use visit remote ${remoteIP}:${kcptunRemotePort}" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "After=network.target" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "[Service]" >> ${HOME}/kcptun-client/kcptun-client.service &&
-echo "ExecStart=${HOME}/kcptun-client/client_linux_amd64-c ${HOME}/kcptun-client/kcptun.config" >> ${HOME}/kcptun-client/kcptun-client.service &&
+echo "ExecStart=${HOME}/kcptun-client/client_linux_amd64-c ${HOME}/kcptun-client/kcptun-client-config.json" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "[Install]" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "WantedBy=multi-user.target" >> ${HOME}/kcptun-client/kcptun-client.service &&
-echo "nohup ${HOME}/kcptun-client/client_linux_amd64-c ${HOME}/kcptun-client/kcptun.config > ${HOME}/kcptun.log &" >> ${HOME}/start_kcptun_client.sh &&
+echo "nohup ${HOME}/kcptun-client/client_linux_amd64 -c ${HOME}/kcptun-client/kcptun-client-config.json > ${HOME}/kcptun.log &" >> ${HOME}/start_kcptun_client.sh &&
 chmod +x ${HOME}/start_kcptun_client.sh
 
 rm -rf ${HOME}/ss-client/ &&
@@ -92,7 +92,7 @@ echo "    \"server\": \"127.0.0.1\"," >> ${HOME}/ss-client/ss-client-config.json
 echo "    \"server_port\": ${kcptunLocalPort}," >> ${HOME}/ss-client/ss-client-config.json &&
 echo "    \"local_address\": \"127.0.0.1\"," >> ${HOME}/ss-client/ss-client-config.json &&
 echo "    \"password\": \"renburugou\"," >> ${HOME}/ss-client/ss-client-config.json &&
-echo "    \"method\": \"rc4-md5\"," >> ${HOME}/ss-client/ss-client-config.json &&
+echo "    \"method\": \"rc4-md5\"" >> ${HOME}/ss-client/ss-client-config.json &&
 echo "}" >> ${HOME}/ss-client/ss-client-config.json &&
 echo "[Unit]" >> ${HOME}/ss-client/ss-client.service &&
 echo "Description=shadowsocks client use kcptun ${kcptunLocalPort}" >> ${HOME}/ss-client/ss-client.service &&
