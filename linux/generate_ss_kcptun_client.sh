@@ -56,7 +56,7 @@ cp linux/kcptun/client_linux_amd64 ${HOME}/kcptun-client/ &&
 chmod +x ${HOME}/kcptun-client/client_linux_amd64 &&
 echo "{" >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"localaddr\": \"${kcptunLocalPort}\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
-echo "    \"remoteaddr\": \"${RemoteIp}:${kcptunRemotePort}\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
+echo "    \"remoteaddr\": \"${remoteIP}:${kcptunRemotePort}\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"key\": \"renburugou\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"crypt\": \"none\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
 echo "    \"mode\": \"fast\"," >> ${HOME}/kcptun-client/kcptun-client-config.json &&
