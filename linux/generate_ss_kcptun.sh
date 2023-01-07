@@ -1,6 +1,6 @@
 IP=$1
-ssPort=18888
-kcptunPort=18887
+ssPort=$2
+kcptunPort=$3
 
 apt -y install python
 apt -y install python-pip
