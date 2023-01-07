@@ -1,6 +1,8 @@
-IP=$1
-ssPort=$2
-kcptunPort=$3
+IP=$1 # service ip
+ssPort=$2 # port for shadowsocks
+kcptunPort=$3 # port for kcptun
+proxyPorts=$4 # proxyPorts:proxyPorte-->kcptunPort
+proxyPorte=$5
 
 apt -y install python
 apt -y install python-pip
@@ -22,3 +24,11 @@ systemctl start shadowsocks-server.service
 systemctl start kcptun-server-${kcptunPort}.service
 systemctl status shadowsocks-server.service
 systemctl status kcptun-server-${kcptunPort}.service
+# open the ssPort and kcptunPort to accept, iptables --list|grep ${theport} to view the rules
+iptables -I INPUT -p tcp --dport ${ssPort} -j ACCEPT
+iptables -I INPUT -p udp --dport ${kcptunPort} -j ACCEPT
+# proxyPorts:proxyPorte-->kcptunPort, iptables -t nat --list to view the rules, iptables -t nat -D ${type} ${line-number} to delete the rules
+iptables -t nat -A PREROUTING -p udp --dport ${proxyPorts}:${proxyPorte} -j REDIRECT --to-ports ${kcptunPort}
+# open the proxyPort
+iptables -I INPUT -p udp --dport ${proxyPorts}:${proxyPorte} -j ACCEPT
+iptables-save
