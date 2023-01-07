@@ -49,6 +49,7 @@ apt update
 apt -y install python python-pip &&
 pip install --upgrade pip &&
 pip install shadowsocks==2.8.2
+sed -i 's/EVP_CIPHER_CTX_cleanup/EVP_CIPHER_CTX_reset/' /usr/local/lib/python2.7/dist-packages/shadowsocks/crypto/openssl.py
 
 rm -rf ${HOME}/kcptun-client/ &&
 mkdir -p ${HOME}/kcptun-client/ &&
