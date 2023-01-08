@@ -49,7 +49,7 @@ apt update
 apt -y install python python-pip &&
 pip install --upgrade pip &&
 pip install shadowsocks==2.8.2
-sed -i 's/EVP_CIPHER_CTX_cleanup/EVP_CIPHER_CTX_reset/' /usr/local/lib/python2.7/dist-packages/shadowsocks/crypto/openssl.py
+#sed -i 's/EVP_CIPHER_CTX_cleanup/EVP_CIPHER_CTX_reset/' /usr/local/lib/python2.7/dist-packages/shadowsocks/crypto/openssl.py
 
 rm -rf ${HOME}/kcptun-client/ &&
 mkdir -p ${HOME}/kcptun-client/ &&
@@ -76,7 +76,7 @@ echo "[Unit]" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "Description=kcptun client use visit remote ${remoteIP}:${kcptunRemotePort}" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "After=network.target" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "[Service]" >> ${HOME}/kcptun-client/kcptun-client.service &&
-echo "ExecStart=${HOME}/kcptun-client/client_linux_amd64-c ${HOME}/kcptun-client/kcptun-client-config.json" >> ${HOME}/kcptun-client/kcptun-client.service &&
+echo "ExecStart=${HOME}/kcptun-client/client_linux_amd64 -c ${HOME}/kcptun-client/kcptun-client-config.json" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "[Install]" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "WantedBy=multi-user.target" >> ${HOME}/kcptun-client/kcptun-client.service &&
 echo "nohup ${HOME}/kcptun-client/client_linux_amd64 -c ${HOME}/kcptun-client/kcptun-client-config.json > ${HOME}/kcptun.log &" >> ${HOME}/start_kcptun_client.sh &&
@@ -98,17 +98,19 @@ echo "[Unit]" >> ${HOME}/ss-client/ss-client.service &&
 echo "Description=shadowsocks client use kcptun ${kcptunLocalPort}" >> ${HOME}/ss-client/ss-client.service &&
 echo "After=network.target" >> ${HOME}/ss-client/ss-client.service &&
 echo "[Service]" >> ${HOME}/ss-client/ss-client.service &&
-echo "ExecStart=sslocal -c ${HOME}/ss-client/ss-client-config.json" >> ${HOME}/ss-client/ss-client.service &&
+echo "ExecStart=$(which sslocal) -c ${HOME}/ss-client/ss-client-config.json" >> ${HOME}/ss-client/ss-client.service &&
 echo "[Install]" >> ${HOME}/ss-client/ss-client.service &&
 echo "WantedBy=multi-user.target" >> ${HOME}/ss-client/ss-client.service &&
-echo "nohup sslocal -c ${HOME}/ss-client/ss-client-config.json > ${HOME}/ss-client.log &" >> ${HOME}/start_ss_client.sh &&
+echo "nohup $(which sslocal) -c ${HOME}/ss-client/ss-client-config.json > ${HOME}/ss-client.log &" >> ${HOME}/start_ss_client.sh &&
 chmod +x ${HOME}/start_ss_client.sh
 
 sudo cp ${HOME}/ss-client/ss-client.service /etc/systemd/system/
-systemctl daemon-reload
-systemctl stop ss-client.service
-systemctl start ss-client.service
+sudo systemctl daemon-reload
+sudo systemctl stop ss-client.service
+sudo systemctl start ss-client.service
+sudo systemctl status ss-client.service
 sudo cp ${HOME}/kcptun-client/kcptun-client.service /etc/systemd/system/
-systemctl daemon-reload
-systemctl stop kcptun-client.service
-systemctl start kcptun-client.service
+sudo systemctl daemon-reload
+sudo systemctl stop kcptun-client.service
+sudo systemctl start kcptun-client.service
+sudo systemctl status kcptun-client.service
