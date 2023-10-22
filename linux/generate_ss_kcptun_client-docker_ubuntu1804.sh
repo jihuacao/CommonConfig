@@ -1,3 +1,13 @@
+# 本脚本基于docker构建shadowsocks代理客户端
+# 基于bridge网络模式可以实现
+#   * container使用代理
+#   * host使用代理
+# 基于端口转发：iptables -t nat -A PREROUTING -d ${host_ip} -p tcp --dport 1080 -j DNAT --to-destination ${container_ip}:1080可实现
+#   * 外部host使用代理
+# 使用：
+#   * 准备docker环境
+#   * 于host中运行此脚本会自动拉去payforsins/ss:latest镜像并构建名为shadowsocks的容器
+#     * 相关配置存放于${HOME}/ss-client与${HOME}/kcptun-client中
 remoteIP=""
 kcptunRemotePort=""
 ssLocalPort=""
