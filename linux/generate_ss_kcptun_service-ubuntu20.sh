@@ -127,3 +127,5 @@ iptables -t nat -A PREROUTING -p udp --dport ${proxyPorts}:${proxyPorte} -j REDI
 # open the proxyPort
 iptables -I INPUT -p udp --dport ${proxyPorts}:${proxyPorte} -j ACCEPT
 iptables-save
+apt -y install iptables-persistent
+service netfilter-persistent save
