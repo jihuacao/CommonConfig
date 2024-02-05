@@ -10,6 +10,7 @@ usage(){
     echo '--kcptun_port 指定kcptun服务的监听端口'
     echo '--proxy_port_start 指定端口转发起始端口，proxy_port_start:proxy_port_end-->(将会被映射到)kcptun_port'
     echo '--proxy_port_end 指定端口转发结尾端口，proxy_port_start:proxy_port_end-->(将会被映射到)kcptun_port'
+    echo '--password 指定密码'
 }
 ARGS=`getopt \
     -o h\
@@ -19,6 +20,7 @@ ARGS=`getopt \
     --long kcptun_port:: \
     --long proxy_port_start:: \
     --long proxy_port_end:: \
+    --long password:: \
     -n 'example.bash' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
@@ -38,6 +40,9 @@ while true ; do
             ;;
         --proxy_port_end)
             echo "specify proxy_port_end as $2"; proxyPorte=$2; shift 2
+            ;;
+        --password)
+            echo "specify password as $2"; password=$2; shift 2
             ;;
         -h|--help) usage; exit 1;;
         --) shift 1; break;;
@@ -60,7 +65,7 @@ rm -rf ${HOME}/ss-service/
 mkdir -p ${HOME}/ss-service/
 echo "{" >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"port_password\": {" >> ${HOME}/ss-service/ss-service-config.json
-echo "        \"${ssPort}\": \"renburugou\"" >> ${HOME}/ss-service/ss-service-config.json
+echo "        \"${ssPort}\": \"${password}\"" >> ${HOME}/ss-service/ss-service-config.json
 echo "    }, " >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"timeout\": 300, " >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"local_port\": 1080, " >> ${HOME}/ss-service/ss-service-config.json
@@ -90,7 +95,7 @@ echo "    \"quiet\": false," >> ${HOME}/kcptun-service/kcptun-service-config.jso
 echo "    \"nocomp\": true," >> ${HOME}/kcptun-service/kcptun-service-config.json
 echo "    \"sndwnd\": 512," >> ${HOME}/kcptun-service/kcptun-service-config.json
 echo "    \"tcp\": false," >> ${HOME}/kcptun-service/kcptun-service-config.json
-echo "    \"key\": \"renburugou\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"key\": \"${password}\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
 echo "    \"crypt\": \"none\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
 echo "    \"mode\": \"fast\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
 echo "    \"mtu\": 1350," >> ${HOME}/kcptun-service/kcptun-service-config.json

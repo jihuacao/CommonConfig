@@ -9,6 +9,7 @@ usage(){
     echo '--kcptun_remote_port 指定kcptun服务的监听端口'
     echo '--ss_local_port 指定ss客户端的监听端口，使用网络时，往这个端口传数据'
     echo '--kcptun_local_port 指定kcptun客户端的监听端口，ss客户端会往这个端口传数据'
+    echo '--password 指定密码'
 }
 ARGS=`getopt \
     -o h\
@@ -17,6 +18,7 @@ ARGS=`getopt \
     --long kcptun_remote_port:: \
     --long ss_local_port:: \
     --long kcptun_local_port:: \
+    --long password:: \
     -n 'example.bash' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
@@ -33,6 +35,9 @@ while true ; do
             ;;
         --ss_local_port)
             echo "specify ss_local_port as $2"; ssLocalPort=$2; shift 2
+            ;;
+        --password)
+            echo "specify password as $2"; password=$2; shift 2
             ;;
         -h|--help) usage; exit 1;;
         --) shift 1; break;;
