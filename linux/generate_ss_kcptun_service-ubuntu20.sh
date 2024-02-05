@@ -55,6 +55,7 @@ for arg do
    echo '--> '"\`$arg\`" ;
 done
 
+apt update
 apt -y install python3
 apt -y install python3-pip
 python3 -m pip install --upgrade pip
