@@ -59,14 +59,22 @@ echo "modify nps service config"
 sed -i 's/http_proxy_/#http_proxy_/' conf/nps.conf
 sed -i 's/https_proxy_/#https_proxy_/' conf/nps.conf
 
-sed -i 's/bridge_type=.*$/bridge_type=tcp/' conf/nps.conf
-sed -i 's/bridge_port=.*$/bridge_port=${bridgePort}/' conf/nps.conf
-sed -i 's/bridge_ip=.*$/bridge_ip=${bridgeIP}/' conf/nps.conf
-sed -i 's/web_user=.*$/web_user=${webUser}/' conf/nps.conf
-sed -i 's/web_passwd=.*$/web_passwd=${webPasswd}/' conf/nps.conf
-sed -i 's/web_port=.*$/web_port=${webPort}/' conf/nps.conf
+sed -i 's/bridge_type=/#bridge_type=/' conf/nps.conf
+sed -i 's/bridge_port=/#bridge_port=/' conf/nps.conf
+sed -i 's/bridge_ip=/#bridge_ip=/' conf/nps.conf
+sed -i 's/web_user=/#web_user=/' conf/nps.conf
+sed -i 's/web_passwd=/#web_passwd=/' conf/nps.conf
+sed -i 's/web_port=/#web_port=/' conf/nps.conf
+
+echo "bridge_type=tcp" >> conf/nps.conf
+echo "bridge_port=${bridgePort}" >> conf/nps.conf
+echo "bridge_ip=${bridgeIP}" >> conf/nps.conf
+echo "web_user=${webUser}" >> conf/nps.conf
+echo "web_passwd=${webPasswd}" >> conf/nps.conf
+echo "web_port=${webPort}" >> conf/nps.conf
 
 echo "generate nps service"
+rm ${HOME}/nps-service/nps-service.service
 echo "[Unit] " >> ${HOME}/nps-service/nps-service.service
 echo "Description=NPS Server" >> ${HOME}/nps-service/nps-service.service
 echo "After=network.target " >> ${HOME}/nps-service/nps-service.service
