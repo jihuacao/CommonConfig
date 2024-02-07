@@ -77,17 +77,17 @@ mkdir -p /etc/nps/conf/
 cp conf/nps.conf /etc/nps/conf/
 
 echo "generate nps service"
-rm ${HOME}/nps-service/nps-service.service
-echo "[Unit] " >> ${HOME}/nps-service/nps-service.service
-echo "Description=NPS Server" >> ${HOME}/nps-service/nps-service.service
-echo "After=network.target " >> ${HOME}/nps-service/nps-service.service
-echo "[Service] " >> ${HOME}/nps-service/nps-service.service
-echo "WorkingDirectory=${HOME}/nps-service/" >> ${HOME}/nps-service/nps-service.service
-echo "ExecStart=${HOME}/nps-service/nps" >> ${HOME}/nps-service/nps-service.service
-echo "[Install] " >> ${HOME}/nps-service/nps-service.service
-echo "WantedBy=multi-user.target" >> ${HOME}/nps-service/nps-service.service
+rm ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "[Unit] " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "Description=NPS Server" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "After=network.target " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "[Service] " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "WorkingDirectory=${HOME}/nps-service/" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "ExecStart=${HOME}/nps-service/nps" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "[Install] " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "WantedBy=multi-user.target" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 chmod +x ${HOME}/nps-service/nps
-cp ${HOME}/nps-service/nps-service.service /etc/systemd/system/
+cp ${HOME}/nps-service/nps-service-${webPasswd}.service /etc/systemd/system/nps-service.service
 
 echo "enable nps service"
 systemctl daemon-reload
