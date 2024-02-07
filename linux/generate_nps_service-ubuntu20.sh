@@ -26,7 +26,7 @@ while true ; do
             echo "specify bridge_ip as $2"; bridgeIP=$2; shift 2
             ;;
         --bridge_port)
-            echo "specify bridge_port as $2"; bidgePort=$2; shift 2
+            echo "specify bridge_port as $2"; bridgePort=$2; shift 2
             ;;
         --web_user)
             echo "specify web_user as $2"; webUser=$2; shift 2
@@ -59,19 +59,22 @@ echo "modify nps service config"
 sed -i 's/http_proxy_/#http_proxy_/' conf/nps.conf
 sed -i 's/https_proxy_/#https_proxy_/' conf/nps.conf
 
-sed -i 's/bridge_type=/#bridge_type=/' conf/nps.conf
-sed -i 's/bridge_port=/#bridge_port=/' conf/nps.conf
-sed -i 's/bridge_ip=/#bridge_ip=/' conf/nps.conf
-sed -i 's/web_user=/#web_user=/' conf/nps.conf
-sed -i 's/web_passwd=/#web_passwd=/' conf/nps.conf
-sed -i 's/web_port=/#web_port=/' conf/nps.conf
+sed -i 's/bridge_type/#bridge_type/' conf/nps.conf
+sed -i 's/bridge_port/#bridge_port/' conf/nps.conf
+sed -i 's/bridge_ip/#bridge_ip/' conf/nps.conf
+sed -i 's/web_username/#web_username/' conf/nps.conf
+sed -i 's/web_password/#web_password/' conf/nps.conf
+sed -i 's/web_port/#web_port/' conf/nps.conf
 
 echo "bridge_type=tcp" >> conf/nps.conf
 echo "bridge_port=${bridgePort}" >> conf/nps.conf
 echo "bridge_ip=${bridgeIP}" >> conf/nps.conf
-echo "web_user=${webUser}" >> conf/nps.conf
-echo "web_passwd=${webPasswd}" >> conf/nps.conf
+echo "web_username=${webUser}" >> conf/nps.conf
+echo "web_password=${webPasswd}" >> conf/nps.conf
 echo "web_port=${webPort}" >> conf/nps.conf
+
+mkdir -p /etc/nps/conf/
+cp conf/nps.conf /etc/nps/conf/
 
 echo "generate nps service"
 rm ${HOME}/nps-service/nps-service.service
@@ -89,3 +92,5 @@ cp ${HOME}/nps-service/nps-service.service /etc/systemd/system/
 echo "enable nps service"
 systemctl daemon-reload
 systemctl enable nps-service.service
+systemctl stop nps-service.service
+systemctl start nps-service.service
