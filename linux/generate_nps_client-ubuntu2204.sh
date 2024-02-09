@@ -37,9 +37,9 @@ for arg do
 done
 
 cd ${HOME}
-wget -c https://github.com/yisier/nps/releases/download/v0.27.01/freebsd_amd64_client.tar.gz -O NPSClient.tar.gz
+wget -c https://github.com/yisier/nps/releases/download/v0.27.01/freebsd_amd64_client.tar.gz -O NPSClient-${date}.tar.gz
 mkdir -p nps-client
-tar -xvf NPSClient.tar.gz -C nps-client
+tar -xvf NPSClient-${date}.tar.gz -C nps-client
 cd nps-client
 
 echo "generate nps client"
