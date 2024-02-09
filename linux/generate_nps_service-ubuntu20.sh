@@ -78,7 +78,7 @@ mkdir -p /etc/nps/conf/
 cp conf/nps.conf /etc/nps/conf/
 
 echo "generate nps service"
-rm ${HOME}/nps-service/nps-service-${webPasswd}.service
+touch ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "[Unit] " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "Description=NPS Server" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "After=network.target " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
