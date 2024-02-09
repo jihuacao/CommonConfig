@@ -37,7 +37,7 @@ for arg do
 done
 
 cd ${HOME}
-wget -c https://github.com/ehang-io/nps/releases/download/v0.26.9/linux_amd64_client.tar.gz -O NPSClient.tar.gz
+wget -c https://github.com/yisier/nps/releases/download/v0.27.01/freebsd_amd64_client.tar.gz -O NPSClient.tar.gz
 mkdir -p nps-client
 tar -xvf NPSClient.tar.gz -C nps-client
 cd nps-client

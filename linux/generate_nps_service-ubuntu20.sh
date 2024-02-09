@@ -50,7 +50,8 @@ done
 cd ~
 apt update
 apt -y install wget
-wget -c https://github.com/ehang-io/nps/releases/download/v0.26.9/linux_amd64_server.tar.gz -O NPSServer.tar.gz
+#wget -c https://github.com/ehang-io/nps/releases/download/v0.26.9/linux_amd64_server.tar.gz -O NPSServer.tar.gz
+wget -c https://github.com/yisier/nps/releases/download/v0.27.01/linux_amd64_server.tar.gz -O NPSServer.tar.gz
 mkdir -p nps-service
 tar -xvf NPSServer.tar.gz -C nps-service
 cd nps-service
@@ -83,7 +84,7 @@ echo "Description=NPS Server" >> ${HOME}/nps-service/nps-service-${webPasswd}.se
 echo "After=network.target " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "[Service] " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "WorkingDirectory=${HOME}/nps-service/" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
-echo "ExecStart=${HOME}/nps-service/nps" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
+echo "ExecStart=${HOME}/nps-service/nps -conf_path=${HOME}/nps-service/" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "[Install] " >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 echo "WantedBy=multi-user.target" >> ${HOME}/nps-service/nps-service-${webPasswd}.service
 chmod +x ${HOME}/nps-service/nps
