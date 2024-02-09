@@ -1,6 +1,6 @@
 bridgeType="tcp"
-authCryptKey=$(date +%s%N |md5sum | cut -c 1-16)
-webPasswd=$(date +%s%N |md5sum | cut -c 1-24)
+authCryptKey1=$(date +%s%N |md5sum | cut -c 1-16)
+webPasswd1=$(date +%s%N |md5sum | cut -c 1-8)
 usage(){
     echo 'help message'
     echo '--bridge_ip 指定nps的ip或者host'
@@ -9,6 +9,11 @@ usage(){
     echo '--web_passwd 指定nps后端控制密码，可随机生成'
     echo '--web_port 指定nps后端控制端口'
 }
+webPasswd2=$(date +%s%N |md5sum | cut -c 1-8)
+authCryptKey2=$(date +%s%N |md5sum | cut -c 1-8)
+authCryptKey=$(echo ${authCryptKey1}${authCryptKey})
+webPasswd3=$(date +%s%N |md5sum | cut -c 1-8)
+webPasswd=$(echo ${webPasswd1}${webPasswd2}${webPasswd3})
 ARGS=`getopt \
     -o h \
     --long help, \
@@ -51,9 +56,9 @@ cd ~
 apt update
 apt -y install wget
 #wget -c https://github.com/ehang-io/nps/releases/download/v0.26.9/linux_amd64_server.tar.gz -O NPSServer.tar.gz
-wget -c https://github.com/yisier/nps/releases/download/v0.27.01/linux_amd64_server.tar.gz -O NPSServer-${date}.tar.gz
+wget -c https://github.com/yisier/nps/releases/download/v0.27.01/linux_amd64_server.tar.gz -O NPSServer-${webPasswd}.tar.gz
 mkdir -p nps-service
-tar -xvf NPSServer-${date}.tar.gz -C nps-service
+tar -xvf NPSServer-${webPasswd}.tar.gz -C nps-service
 cd nps-service
 
 echo "modify nps service config"
