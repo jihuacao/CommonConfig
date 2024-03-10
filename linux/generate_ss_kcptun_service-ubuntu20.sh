@@ -117,11 +117,11 @@ cp ${HOME}/kcptun-service/kcptun-service.service /etc/systemd/system/
 
 
 systemctl daemon-reload
-systemctl enable ss-service.service
+#systemctl enable ss-service.service
 systemctl enable kcptun-service.service
 systemctl stop ss-service.service
 systemctl stop kcptun-service.service
-systemctl start ss-service.service
+#systemctl start ss-service.service
 systemctl start kcptun-service.service
 systemctl status ss-service.service
 systemctl status kcptun-service.service
@@ -135,3 +135,19 @@ iptables -I INPUT -p udp --dport ${proxyPorts}:${proxyPorte} -j ACCEPT
 iptables-save
 apt -y install iptables-persistent
 service netfilter-persistent save
+
+# using shadowsocks-libev
+sudo snap install shadowsocks-libev
+echo "[Unit] " >> ${HOME}/ss-service/sslibev-service.service
+echo "Description=shadowsocks-libev Server" >> ${HOME}/ss-service/sslibev-service.service
+echo "After=network.target " >> ${HOME}/ss-service/sslibev-service.service
+echo "[Service] " >> ${HOME}/ss-service/sslibev-service.service
+echo "ExecStart=/snap/bin/shadowsocks-libev.ss-server -s ${IP} -p ${ssPort} -k ${password} -m rc4-md5" >> ${HOME}/ss-service/sslibev-service.service
+echo "[Install] " >> ${HOME}/ss-service/sslibev-service.service
+echo "WantedBy=multi-user.target " >> ${HOME}/ss-service/sslibev-service.service
+cp ${HOME}/ss-service/sslibev-service.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable sslibev-service.service
+systemctl stop sslibev-service.service
+systemctl start sslibev-service.service
+systemctl status sslibev-service.service
