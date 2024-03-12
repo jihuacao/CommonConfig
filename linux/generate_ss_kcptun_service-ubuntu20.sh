@@ -3,6 +3,7 @@ ssPort=$2 # port for shadowsocks
 kcptunPort=$3 # port for kcptun
 proxyPorts=$4 # proxyPorts:proxyPorte-->kcptunPort
 proxyPorte=$5
+encryptMethod=$6 # encrypt method
 usage(){
     echo 'help message'
     echo '--ip 指定ss-kcptun服务部署ip'
@@ -11,6 +12,7 @@ usage(){
     echo '--proxy_port_start 指定端口转发起始端口，proxy_port_start:proxy_port_end-->(将会被映射到)kcptun_port'
     echo '--proxy_port_end 指定端口转发结尾端口，proxy_port_start:proxy_port_end-->(将会被映射到)kcptun_port'
     echo '--password 指定密码'
+    echo '--encrypt_method 指定加密方式'
 }
 ARGS=`getopt \
     -o h\
@@ -21,6 +23,7 @@ ARGS=`getopt \
     --long proxy_port_start:: \
     --long proxy_port_end:: \
     --long password:: \
+    --long encrypt_method:: \
     -n 'example.bash' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
@@ -43,6 +46,9 @@ while true ; do
             ;;
         --password)
             echo "specify password as $2"; password=$2; shift 2
+            ;;
+        --encrypt_method)
+            echo "specify encrypt method as $2"; encryptMethod=$2; shift 2
             ;;
         -h|--help) usage; exit 1;;
         --) shift 1; break;;
@@ -72,7 +78,7 @@ echo "    \"timeout\": 300, " >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"local_port\": 1080, " >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"local_address\": \"127.0.0.1\", " >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"fast_open\": false, " >> ${HOME}/ss-service/ss-service-config.json
-echo "    \"method\": \"rc4-md5\", " >> ${HOME}/ss-service/ss-service-config.json
+echo "    \"method\": \"${encryptMethod}\", " >> ${HOME}/ss-service/ss-service-config.json
 echo "    \"server\": \"${IP}\"" >> ${HOME}/ss-service/ss-service-config.json
 echo "}" >> ${HOME}/ss-service/ss-service-config.json
 echo "[Unit] " >> ${HOME}/ss-service/ss-service.service
@@ -142,7 +148,7 @@ echo "[Unit] " >> ${HOME}/ss-service/sslibev-service.service
 echo "Description=shadowsocks-libev Server" >> ${HOME}/ss-service/sslibev-service.service
 echo "After=network.target " >> ${HOME}/ss-service/sslibev-service.service
 echo "[Service] " >> ${HOME}/ss-service/sslibev-service.service
-echo "ExecStart=/snap/bin/shadowsocks-libev.ss-server -s ${IP} -p ${ssPort} -k ${password} -m rc4-md5" >> ${HOME}/ss-service/sslibev-service.service
+echo "ExecStart=/snap/bin/shadowsocks-libev.ss-server -s ${IP} -p ${ssPort} -k ${password} -m ${encryptMethod}" >> ${HOME}/ss-service/sslibev-service.service
 echo "[Install] " >> ${HOME}/ss-service/sslibev-service.service
 echo "WantedBy=multi-user.target " >> ${HOME}/ss-service/sslibev-service.service
 cp ${HOME}/ss-service/sslibev-service.service /etc/systemd/system/

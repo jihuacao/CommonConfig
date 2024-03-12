@@ -12,6 +12,7 @@ remoteIP=""
 kcptunRemotePort=""
 ssLocalPort=""
 kcptunLocalPort=""
+encryptMethod=""
 
 usage(){
     echo 'help message'
@@ -20,6 +21,7 @@ usage(){
     echo '--ss_local_port 指定ss客户端的监听端口，使用网络时，往这个端口传数据'
     echo '--kcptun_local_port 指定kcptun客户端的监听端口，ss客户端会往这个端口传数据'
     echo '--password 指定密码'
+    echo '--encrypt_method 指定加密方式'
 }
 ARGS=`getopt \
     -o h\
@@ -29,6 +31,7 @@ ARGS=`getopt \
     --long ss_local_port:: \
     --long kcptun_local_port:: \
     --long password:: \
+    --long encrypt_method:: \
     -n 'example.bash' -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
@@ -48,6 +51,9 @@ while true ; do
             ;;
         --password)
             echo "specify password as $2"; password=$2; shift 2
+            ;;
+        --encrypt_method)
+            echo "specify encrypt method as $2"; encryptMethod=$2; shift 2
             ;;
         -h|--help) usage; exit 1;;
         --) shift 1; break;;
@@ -108,7 +114,7 @@ echo "    \"server\": \"0.0.0.0\"," >> ${HOME}/ss-client/ss-client-config.json &
 echo "    \"server_port\": ${kcptunLocalPort}," >> ${HOME}/ss-client/ss-client-config.json &&
 echo "    \"local_address\": \"0.0.0.0\"," >> ${HOME}/ss-client/ss-client-config.json &&
 echo "    \"password\": \"${password}\"," >> ${HOME}/ss-client/ss-client-config.json &&
-echo "    \"method\": \"rc4-md5\"" >> ${HOME}/ss-client/ss-client-config.json &&
+echo "    \"method\": \"${encryptMethod}\"" >> ${HOME}/ss-client/ss-client-config.json &&
 echo "}" >> ${HOME}/ss-client/ss-client-config.json &&
 echo "[Unit]" >> ${HOME}/ss-client/ss-client.service &&
 echo "Description=shadowsocks client use kcptun ${kcptunLocalPort}" >> ${HOME}/ss-client/ss-client.service &&
