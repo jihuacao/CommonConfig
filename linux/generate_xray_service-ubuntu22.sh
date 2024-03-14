@@ -3,6 +3,8 @@ usage(){
     echo '--domain 指定远程服务的域名'
     echo '--xray_server_port 指定xray服务的监听端口'
     echo '--uuid 指定uuid'
+    echo '--kcptun_port 指定kcptun服务的监听端口'
+    echo '--kcptun_password 指定kcptun密码'
     echo '--do_offline 指定离线模型，即xray已经下载好了'
     echo '--protocol 指定通信协议,默认vless'
     echo '--flow 指定flow类型，默认为xtls-rprx-vision'
@@ -28,6 +30,8 @@ ARGS=`getopt \
     --long site_https_port:: \
     --long domain:: \
     --long xray_server_port:: \
+    --long kcptun_port:: \
+    --long kcptun_password:: \
     --long protocol:: \
     --long uuid:: \
     --long flow:: \
@@ -52,6 +56,12 @@ while true ; do
             ;;
         --xray_server_port)
             echo "specify xray server port as $2"; xrayServerPort=$2; shift 2
+            ;;
+        --kcptun_port)
+            echo "specify kcptun port as $2"; kcptunPort=$2; shift 2
+            ;;
+        --kcptun_password)
+            echo "specify kcptun password as $2"; kcptunPassword=$2; shift 2
             ;;
         --protocol)
             echo "specify protocol as $2"; Protocol=$2; shift 2
@@ -91,9 +101,11 @@ done
 cd ${HOME}
 exec_dir=$(pwd)
 
+sudo apt update
+# 安装防火墙管理器
+apt -y install iptables-persistent
 # 配置服务端
 ## 构建一个简单的网站来充当门面防止查水表
-sudo apt update
 apt -y install nginx
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 ### 处理防火墙策略
@@ -338,6 +350,46 @@ systemctl enable xray-service
 ## 防火墙端口打开
 iptables -I INPUT -p tcp --dport ${xrayServerPort} -j ACCEPT
 ## 保存防火墙策略
-iptables-save
-apt -y install iptables-persistent
+service netfilter-persistent save
+
+# 增加kcptun
+kcptun_dir=${exec_dir}/kcptun-service
+rm -rf ${HOME}/kcptun-service/
+mkdir -p ${HOME}/kcptun-service/
+echo "{" >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"target\": \"${Domain}:${xrayServerPort}\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"pprof\": false," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"datashard\": 10," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"parityshard\": 3," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"dscp\": 0," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"quiet\": false," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"nocomp\": true," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"sndwnd\": 512," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"tcp\": false," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"key\": \"${kcptunPassword}\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"crypt\": \"none\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"mode\": \"fast\"," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"mtu\": 1350," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"rcvwnd\": 512," >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "    \"listen\": \":${kcptunPort}\"" >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "}" >> ${HOME}/kcptun-service/kcptun-service-config.json
+echo "[Unit] " >> ${HOME}/kcptun-service/kcptun-service.service
+echo "Description=Kcptun Server 20001" >> ${HOME}/kcptun-service/kcptun-service.service
+echo "After=network.target " >> ${HOME}/kcptun-service/kcptun-service.service
+echo "[Service] " >> ${HOME}/kcptun-service/kcptun-service.service
+echo "ExecStart=${HOME}/kcptun-service/server_linux_amd64 -c ${HOME}/kcptun-service/kcptun-service-config.json" >> ${HOME}/kcptun-service/kcptun-service.service
+echo "[Install] " >> ${HOME}/kcptun-service/kcptun-service.service
+echo "WantedBy=multi-user.target" >> ${HOME}/kcptun-service/kcptun-service.service
+cp linux/kcptun/server_linux_amd64 ${HOME}/kcptun-service/
+chmod +x ${HOME}/kcptun-service/server_linux_amd64
+cp ${HOME}/kcptun-service/kcptun-service.service /etc/systemd/system/
+## 构建服务
+systemctl daemon-reload
+systemctl enable kcptun-service.service
+systemctl stop kcptun-service.service
+systemctl start kcptun-service.service
+systemctl status kcptun-service.service
+## 处理端口防火墙
+iptables -I INPUT -p udp --dport ${kcptunPort} -j ACCEPT
+## 保存策略
 service netfilter-persistent save
