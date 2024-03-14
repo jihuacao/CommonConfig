@@ -172,18 +172,25 @@ ufw status
 ### 重启nginx
 systemctl reload nginx
 ## 生成证书
-cert_dir=$(exec_dir)/Cert/
+cert_dir=${exec_dir}/Cert
 mkdir -p ${cert_dir}
-wget -O -  https://get.acme.sh | sh
-. .bashrc
-acme.sh --upgrade --auto-upgrade
+### 定义 acme.sh 安装路径
+ACME_DIR=/root/.acme.sh/
+### 确保 acme.sh 安装在 ACME_DIR 路径下
+if [ ! -d "$ACME_DIR" ]; then
+    mkdir -p "$ACME_DIR"
+    wget -qO- "https://get.acme.sh" | sh
+fi
+### 导入 acme.sh 环境变量
+source "$ACME_DIR/acme.sh.env"
+${ACME_DIR}/acme.sh --upgrade --auto-upgrade
 ### 测试域名
-acme.sh --issue --server letsencrypt --test -d ${Domain} -w /var/www/html --keylength ec-256
-acme.sh --set-default-ca --server letsencrypt
+${ACME_DIR}/acme.sh --issue --server letsencrypt --test -d ${Domain} -w /var/www/html --keylength ec-256
+${ACME_DIR}/acme.sh --set-default-ca --server letsencrypt
 ### 正式申请
-acme.sh --issue -d ${Domain} -w /var/www/html --keylength ec-256 --force
+${ACME_DIR}/acme.sh --issue -d ${Domain} -w /var/www/html --keylength ec-256 --force
 ### 安装证书
-acme.sh --installcert -d ${Domain} --cert-file ${cert_dir}/cert.crt --key-file ${exec_dir}/cert.key --fullchain-file ${exec_dir}/fullchain.crt --ecc
+${ACME_DIR}/acme.sh --installcert -d ${Domain} --cert-file ${cert_dir}/cert.crt --key-file ${cert_dir}/cert.key --fullchain-file ${cert_dir}/fullchain.crt --ecc
 ## 下载工具
 if test "${Offline}"; then
     echo "do offline"
