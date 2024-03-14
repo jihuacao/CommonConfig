@@ -1,18 +1,20 @@
 usage(){
     echo 'help message'
-    echo '--site_port 指定网站端口，默认为80'
     echo '--domain 指定远程服务的域名'
     echo '--xray_server_port 指定xray服务的监听端口'
-    echo '--protocol 指定通信协议,默认vless'
     echo '--uuid 指定uuid'
+    echo '--do_offline 指定离线模型，即xray已经下载好了'
+    echo '--protocol 指定通信协议,默认vless'
     echo '--flow 指定flow类型，默认为xtls-rprx-vision'
     echo '--encryption 指定加密类型，默认为none'
     echo '--network 指定流量类型，默认为tcp'
     echo '--security 指定安全类型，默认为tls'
     echo '--version 指定xray版本，默认v1.8.9'
-    echo '--do_offline 指定离线模型，即xray已经下载好了'
+    echo '--site_http_port 指定网站端口，默认为80'
+    echo '--site_https_port 指定网站端口，默认为443'
 }
-sitePort=80
+siteHttpPort=80
+siteHttpsPort=443
 Protocol='vless'
 Flow='xtls-rprx-vision'
 Encryption='none'
@@ -22,6 +24,8 @@ Version='v1.8.9'
 ARGS=`getopt \
     -o h \
     --long help, \
+    --long site_http_port:: \
+    --long site_https_port:: \
     --long domain:: \
     --long xray_server_port:: \
     --long protocol:: \
@@ -37,6 +41,12 @@ if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 eval set -- "${ARGS}"
 while true ; do
     case "$1" in
+        --site_http_port)
+            echo "specify site http port as $2"; siteHttpPort=$2; shift 2
+            ;;
+        --site_https_port)
+            echo "specify site https port as $2"; siteHttpsPort=$2; shift 2
+            ;;
         --domain)
             echo "specify domain as $2"; Domain=$2; shift 2
             ;;
@@ -267,7 +277,7 @@ echo "        ]," >> ${conf_path}
 echo "        \"decryption\": \"none\"," >> ${conf_path}
 echo "        \"fallbacks\": [" >> ${conf_path}
 echo "          {" >> ${conf_path}
-echo "            \"dest\": ${sitePort}// 默认回落到防探测的代理" >> ${conf_path}
+echo "            \"dest\": ${siteHttpPort}// 默认回落到防探测的代理" >> ${conf_path}
 echo "          }" >> ${conf_path}
 echo "        ]" >> ${conf_path}
 echo "      }," >> ${conf_path}
