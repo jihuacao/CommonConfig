@@ -1,3 +1,4 @@
+common_config_root=$(dirname $(dirname $0))
 usage(){
     echo 'help message'
     echo '--domain 指定远程服务的域名'
@@ -380,7 +381,7 @@ echo "[Service] " >> ${HOME}/kcptun-service/kcptun-service.service
 echo "ExecStart=${HOME}/kcptun-service/server_linux_amd64 -c ${HOME}/kcptun-service/kcptun-service-config.json" >> ${HOME}/kcptun-service/kcptun-service.service
 echo "[Install] " >> ${HOME}/kcptun-service/kcptun-service.service
 echo "WantedBy=multi-user.target" >> ${HOME}/kcptun-service/kcptun-service.service
-cp linux/kcptun/server_linux_amd64 ${HOME}/kcptun-service/
+cp ${common_config_root}/linux/kcptun/server_linux_amd64 ${HOME}/kcptun-service/
 chmod +x ${HOME}/kcptun-service/server_linux_amd64
 cp ${HOME}/kcptun-service/kcptun-service.service /etc/systemd/system/
 ## 构建服务
