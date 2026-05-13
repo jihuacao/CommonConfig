@@ -1,0 +1,36 @@
+# https://blog.csdn.net/weixin_44606481/article/details/129780540
+version: '3.8'
+networks:
+  global-bridge:
+    driver: bridge
+services:
+  xray-service:
+    image: teddysun/xray:26.4.25
+    restart: unless-stopped
+    networks:
+      - global-bridge
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/xray-service-config.json:/etc/xray/config.json
+      - /storage/XrayKcptun/xray-service/logs:/logs/
+  kcptun-service:
+    image: xzdbd/kcptun:2.0
+    restart: unless-stopped
+    networks:
+      - global-bridge
+    ports:
+      - 20008:20002
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config/kcptun-service-config.json:/server.json
+      - /storage/XrayKcptun/kcptun-service/logs:/logs/
+    command: server -c /server.json --log /logs/kcptun.log
+  squid:
+    image: ubuntu/squid:6.6-24.04_edge
+    networks:
+      - global-bridge
+    ports:
+      - 20009:20009
+    volumes:
+      - ./config/squid.conf:/etc/squid/squid.conf:ro
+    restart: unless-stopped
