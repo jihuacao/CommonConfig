@@ -96,6 +96,10 @@ chmod +x ${HOME}/nps-service/nps
 cp ${HOME}/nps-service/nps-service-${webPasswd}.service /etc/systemd/system/nps-service.service
 
 echo "enable nps service"
+iptables -I INPUT -p tcp --dport ${webPort} -j ACCEPT
+iptables -I INPUT -p tcp --dport ${bridgePort} -j ACCEPT
+## 保存策略
+service netfilter-persistent save
 systemctl daemon-reload
 systemctl enable nps-service.service
 systemctl stop nps-service.service
