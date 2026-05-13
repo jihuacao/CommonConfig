@@ -56,7 +56,7 @@ cd ~
 apt update
 apt -y install wget
 #wget -c https://github.com/ehang-io/nps/releases/download/v0.26.9/linux_amd64_server.tar.gz -O NPSServer.tar.gz
-wget -c https://github.com/yisier/nps/releases/download/v0.27.01/linux_amd64_server.tar.gz -O NPSServer-${webPasswd}.tar.gz
+wget -c https://github.com/yisier/nps/releases/download/v0.26.18/linux_amd64_server.tar.gz -O NPSServer-${webPasswd}.tar.gz
 mkdir -p nps-service
 tar -xvf NPSServer-${webPasswd}.tar.gz -C nps-service
 cd nps-service
