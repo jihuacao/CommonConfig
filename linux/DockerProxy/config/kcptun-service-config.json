@@ -1,0 +1,17 @@
+{
+    "target": "xray-service:20001",
+    "pprof": false,
+    "datashard": 10,
+    "parityshard": 3,
+    "dscp": 0,
+    "quiet": false,
+    "nocomp": true,
+    "sndwnd": 512,
+    "tcp": false,
+    "key": "renburugou",
+    "crypt": "none",
+    "mode": "fast",
+    "mtu": 1350,
+    "rcvwnd": 512,
+    "listen": ":20002"
+}
